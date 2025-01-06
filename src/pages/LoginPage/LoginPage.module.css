@@ -1,0 +1,93 @@
+.container {
+  display: flex;
+  width: 100%;
+  max-width: 1000px;
+  background-color: white;
+  column-gap: 30px;
+}
+
+.left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.phoneImage {
+  max-width: 300px;
+}
+
+.right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  row-gap: 10px;
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 350px;
+  text-align: center;
+}
+
+.loginContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #dbdbdb;
+  padding: 0 40px;
+  width: 100%;
+}
+
+.logo {
+  margin-top: 30px;
+}
+
+.orDivider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  text-align: center;
+  width: 100%;
+}
+
+.orDivider span {
+  flex-grow: 1;
+  height: 1px;
+  background-color: #ddd;
+}
+
+.orDivider p {
+  margin: 0 10px;
+  color: #aaa;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.forgotPassword {
+  color: #0095f6;
+  text-decoration: none;
+  font-size: 14px;
+  margin-bottom: 20px;
+  margin-top: 70px;
+}
+
+.forgotPassword:hover {
+  text-decoration: underline;
+}
+
+.signupLink {
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.signupLink a {
+  color: #0095f6;
+  text-decoration: none;
+}
+
+.signupLink a:hover {
+  text-decoration: underline;
+}
