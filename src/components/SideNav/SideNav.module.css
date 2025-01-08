@@ -36,6 +36,10 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+.navigationItem:last-of-type {
+  margin-top: 100px;
+}
+
 .navigationItem:hover {
   background-color: #f0f0f0;
 }
@@ -57,6 +61,14 @@
 /* Иконка внутри элемента навигации */
 .icon {
   margin-right: 16px;
+}
+
+.navigationItem:last-of-type .icon {
+  border: 2px solid #b0b0b0;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  padding: 2px;
 }
 
 /* Стили для текста (названия разделов) */

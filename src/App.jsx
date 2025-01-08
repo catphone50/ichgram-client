@@ -14,6 +14,7 @@ import MessagesPage from "./pages/Messages/MessagesPage";
 import NotificationsPage from "./pages/Notifications/NotificationsPage";
 import CreatePage from "./pages/Create/CreatePage";
 import ProfilePage from "./pages/Profile/ProfilePage";
+import EditProfilePage from "./pages/EditProfilePage/EditProfilePage.jsx";
 
 function App() {
   const isAuthenticated = () => {
@@ -42,6 +43,7 @@ function App() {
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/create" element={<CreatePage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/edit-profile" element={<EditProfilePage />} />
         <Route path="*" element={<h1>404 - Page Not Found</h1>} />
       </Routes>
     </Router>

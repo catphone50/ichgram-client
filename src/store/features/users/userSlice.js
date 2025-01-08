@@ -38,6 +38,7 @@ const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.user.id = action.payload.user.id;
         state.user.username = action.payload.user.username;
+        state.user.avatar = action.payload.user.avatar;
         state.token = action.payload.token;
         state.isLoading = false;
         state.isLoggedIn = true;
@@ -67,11 +68,9 @@ const userSlice = createSlice({
         state.error = null;
       })
       .addCase(getUserInfo.fulfilled, (state, action) => {
-        state.user.username = action.payload.username;
         state.user.email = action.payload.email;
         state.user.fullName = action.payload.fullName;
         state.user.description = action.payload.description;
-        state.user.avatar = action.payload.avatar;
         state.user.createdAt = action.payload.createdAt;
         state.isLoading = false;
       })

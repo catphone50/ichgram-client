@@ -18,7 +18,7 @@ const Profile = ({ profile }) => {
   };
 
   const handleEditProfile = () => {
-    // Перенаправить на страницу редактирования профиля
+    navigate("/edit-profile");
   };
 
   const handleExit = () => {

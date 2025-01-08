@@ -8,7 +8,7 @@ const MainPage = () => {
   console.log(isLoggedIn, user.id);
 
   return (
-    <div className={styles.mainPageContainer}>
+    <div className={styles.searchContainer}>
       <aside className={styles.navigation}>
         <SideNav />
       </aside>

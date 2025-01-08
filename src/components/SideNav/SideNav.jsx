@@ -1,3 +1,5 @@
+import { useSelector } from "react-redux";
+import { Link, useLocation } from "react-router-dom";
 import styles from "./SideNav.module.css";
 import logo from "../../assets/images/logo.svg";
 import home from "../../assets/icons/home.svg";
@@ -12,10 +14,10 @@ import notification from "../../assets/icons/notification.svg";
 import acNotification from "../../assets/icons/notifications-active.svg";
 import create from "../../assets/icons/create.svg";
 import profile from "../../assets/icons/benutzer.svg";
-import { Link, useLocation } from "react-router-dom";
 
 const SideNav = () => {
   const location = useLocation(); // Получение текущего пути
+  const userProfile = useSelector((state) => state.user.user);
 
   const navItems = [
     { name: "Home", path: "/home", icon: home, activeIcon: acHome },
@@ -34,7 +36,12 @@ const SideNav = () => {
       activeIcon: acNotification,
     },
     { name: "Create", path: "/create", icon: create, activeIcon: create },
-    { name: "Profile", path: "/profile", icon: profile, activeIcon: profile },
+    {
+      name: "Profile",
+      path: "/profile",
+      icon: userProfile?.avatar || profile,
+      activeIcon: userProfile?.avatar || profile,
+    },
   ];
 
   return (

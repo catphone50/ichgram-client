@@ -65,3 +65,32 @@ export const getUserInfo = createAsyncThunk(
     }
   }
 );
+
+export const updateUserInfo = createAsyncThunk(
+  "user/updateUserInfo",
+  async (userData, { rejectWithValue, getState }) => {
+    const token = getState().user.token;
+    const userId = getState().user.user?.id;
+
+    if (!token) {
+      return rejectWithValue("No token found");
+    }
+    if (!userId) {
+      return rejectWithValue("No user ID found");
+    }
+
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/user/${userId}`,
+        userData
+        // {
+        //   headers: { Authorization: `Bearer ${token}` },
+        // }
+      );
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
