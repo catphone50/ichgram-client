@@ -1,10 +1,8 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import userReducer from "../actions/userSlice";
-import authReducer from "../actions/authSlice";
+import userReducer from "./features/users/userSlice";
 
 const rootReducer = combineReducers({
   user: userReducer,
-  auth: authReducer,
 
   // posts: postsReducer,
 });

@@ -1,0 +1,84 @@
+.sideNav {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  background-color: #fff;
+  padding-top: 30px;
+  padding-left: 25px;
+  height: 100vh;
+  box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Логотип */
+.logo {
+  width: 100%;
+  max-width: 100px;
+  margin-bottom: 30px;
+}
+
+/* Список навигации */
+.navigationList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+/* Элемент навигации */
+.navigationItem {
+  width: 100%;
+  display: flex;
+  margin-bottom: 30px;
+  align-items: center;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navigationItem:hover {
+  background-color: #f0f0f0;
+}
+
+/* Активный элемент */
+.active {
+  font-weight: 700;
+}
+
+/* Ссылка внутри элемента */
+.navigationLink {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+}
+
+/* Иконка внутри элемента навигации */
+.icon {
+  margin-right: 16px;
+}
+
+/* Стили для текста (названия разделов) */
+.navigationLink span {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* Для адаптивности */
+@media (max-width: 768px) {
+  .sideNav {
+    width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sideNav {
+    width: 180px;
+  }
+
+  .navigationItem {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+}

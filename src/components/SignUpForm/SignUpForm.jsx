@@ -5,7 +5,7 @@ import {
   validateEmail,
   validateUsername,
 } from "../../services/validationService";
-import { registerUser } from "../../actions/authSlice";
+import { registerUser } from "../../store/features/users/userActions";
 
 import styles from "./SignUpForm.module.css";
 

@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { loginUser } from "../../actions/userSlice";
+import { loginUser } from "../../store/features/users/userActions";
 import {
   validateEmail,
   validateUsername,
@@ -21,8 +21,12 @@ const LoginForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      console.log(data);
-      await dispatch(loginUser(data));
+      const response = await dispatch(loginUser(data));
+
+      if (!response.payload.user) {
+        setErrorMessage("Login or password is incorrect");
+        return;
+      }
 
       navigate("/main");
     } catch (error) {
