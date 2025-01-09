@@ -143,6 +143,8 @@ const EditProfile = ({ profile }) => {
             message: "Description cannot exceed 500 characters",
           },
         })}
+        rows="5"
+        style={{ resize: "none" }}
       />
       {errors.description && (
         <span className={styles.error}>{errors.description.message}</span>

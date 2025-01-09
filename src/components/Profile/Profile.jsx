@@ -5,8 +5,9 @@ import { useDispatch } from "react-redux";
 import { logout } from "../../store/features/users/userSlice";
 import { useNavigate } from "react-router-dom";
 import avatar from "../../assets/icons/benutzer.svg";
+import Post from "../Post/Post";
 
-const Profile = ({ profile }) => {
+const Profile = ({ profile, userPosts }) => {
   const isMyProfile = true;
   const [isDescriptionExpanded, setDescriptionExpanded] = useState(false);
 
@@ -18,7 +19,7 @@ const Profile = ({ profile }) => {
   };
 
   const handleEditProfile = () => {
-    navigate("/edit-profile");
+    // Перенаправить на страницу редактирования профиля
   };
 
   const handleExit = () => {
@@ -36,7 +37,7 @@ const Profile = ({ profile }) => {
   const followersCount = profile.followersCount || 0; // Если количество подписчиков отсутствует
   const followingCount = profile.followingCount || 0; // Если количество подписок отсутствует
   const socialLinks = profile.socialLinks || []; // Если нет социальных ссылок
-  const posts = profile.posts || []; // Если нет постов
+  const posts = userPosts || []; // Если нет постов
 
   // Логика для сокращения описания
   const isDescriptionLong = description.length > 255;
@@ -123,14 +124,12 @@ const Profile = ({ profile }) => {
       <div className={styles.photoGallery}>
         {posts.length > 0 ? (
           posts.map((photo, index) => (
-            <div key={index} className={styles.photo}>
-              <img
-                width={300}
-                src={photo}
-                alt={`Фото ${index + 1}`}
-                className={styles.photoImage}
-              />
-            </div>
+            <Post
+              key={index}
+              image={photo.image}
+              authorAvatar={avatarUrl}
+              authorName={profile.username || "No username"}
+            />
           ))
         ) : (
           <p>No photos</p>

@@ -56,6 +56,10 @@
   text-decoration: none;
   color: inherit;
   width: 100%;
+  border: none;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 18px;
 }
 
 /* Иконка внутри элемента навигации */

@@ -28,7 +28,7 @@ const LoginForm = () => {
         return;
       }
 
-      navigate("/main");
+      navigate("/home");
     } catch (error) {
       console.error("Login failed:", error);
       setErrorMessage("Login or password is incorrect");

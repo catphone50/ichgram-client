@@ -1,16 +1,7 @@
-import styles from "./NotificationsPage.module.css";
-import SideNav from "../../components/SideNav/SideNav";
+//import styles from "./NotificationsPage.module.css";
 
 const NotificationsPage = () => {
-  return (
-    <div className={styles.searchContainer}>
-      <aside className={styles.navigation}>
-        <SideNav />
-      </aside>
-
-      <main className={styles.content}>Notifications Page</main>
-    </div>
-  );
+  return <div>Notifications Page</div>;
 };
 
 export default NotificationsPage;

@@ -1,14 +1,24 @@
-import styles from "./CreatePage.module.css";
-import SideNav from "../../components/SideNav/SideNav";
+//import styles from "./CreatePage.module.css";
+
+import { useState } from "react";
+import CreateNewPost from "../../components/CreateNewPost/CreateNewPost";
 
 const CreatePage = () => {
-  return (
-    <div className={styles.searchContainer}>
-      <aside className={styles.navigation}>
-        <SideNav />
-      </aside>
+  const [showModal, setShowModal] = useState(false);
+  const openModal = () => {
+    setShowModal(true);
+  };
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
-      <main className={styles.content}>Create Page</main>
+  return (
+    <div>
+      Create Page
+      <div>
+        <button onClick={openModal}>Создать новый пост</button>
+        <CreateNewPost showModal={showModal} closeModal={closeModal} />
+      </div>
     </div>
   );
 };

@@ -1,16 +1,7 @@
-import styles from "./MessagesPage.module.css";
-import SideNav from "../../components/SideNav/SideNav";
+//import styles from "./MessagesPage.module.css";
 
 const MessagesPage = () => {
-  return (
-    <div className={styles.searchContainer}>
-      <aside className={styles.navigation}>
-        <SideNav />
-      </aside>
-
-      <main className={styles.content}>Messages Page</main>
-    </div>
-  );
+  return <div>Messages Page</div>;
 };
 
 export default MessagesPage;

@@ -14,10 +14,21 @@ import notification from "../../assets/icons/notification.svg";
 import acNotification from "../../assets/icons/notifications-active.svg";
 import create from "../../assets/icons/create.svg";
 import profile from "../../assets/icons/benutzer.svg";
+import CreateNewPost from "../CreateNewPost/CreateNewPost";
+import { useState } from "react";
 
 const SideNav = () => {
   const location = useLocation(); // Получение текущего пути
   const userProfile = useSelector((state) => state.user.user);
+
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = () => {
+    setShowModal(true);
+  };
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
   const navItems = [
     { name: "Home", path: "/home", icon: home, activeIcon: acHome },
@@ -35,7 +46,22 @@ const SideNav = () => {
       icon: notification,
       activeIcon: acNotification,
     },
-    { name: "Create", path: "/create", icon: create, activeIcon: create },
+    // Изменяем элемент "Create" на кнопку, которая открывает модальное окно
+    {
+      name: "Create",
+      component: (
+        <button onClick={openModal} className={styles.navigationLink}>
+          <img
+            width={20}
+            height={20}
+            src={create}
+            alt="Create Icon"
+            className={styles.icon}
+          />
+          Create
+        </button>
+      ),
+    },
     {
       name: "Profile",
       path: "/profile",
@@ -48,28 +74,37 @@ const SideNav = () => {
     <nav className={styles.sideNav}>
       <img src={logo} alt="Logo" className={styles.logo} />
       <ul className={styles.navigationList}>
-        {navItems.map((item) => (
-          <li
-            key={item.name}
-            className={`${styles.navigationItem} ${
-              location.pathname === item.path ? styles.active : ""
-            }`}
-          >
-            <Link to={item.path} className={styles.navigationLink}>
-              <img
-                width={20}
-                height={20}
-                src={
-                  location.pathname === item.path ? item.activeIcon : item.icon
-                }
-                alt={`${item.name} Icon`}
-                className={styles.icon}
-              />
-              {item.name}
-            </Link>
-          </li>
-        ))}
+        {navItems.map((item) =>
+          item.path ? (
+            <li
+              key={item.name}
+              className={`${styles.navigationItem} ${
+                location.pathname === item.path ? styles.active : ""
+              }`}
+            >
+              <Link to={item.path} className={styles.navigationLink}>
+                <img
+                  width={20}
+                  height={20}
+                  src={
+                    location.pathname === item.path
+                      ? item.activeIcon
+                      : item.icon
+                  }
+                  alt={`${item.name} Icon`}
+                  className={styles.icon}
+                />
+                {item.name}
+              </Link>
+            </li>
+          ) : (
+            <li key={item.name} className={styles.navigationItem}>
+              {item.component}
+            </li>
+          )
+        )}
       </ul>
+      <CreateNewPost showModal={showModal} closeModal={closeModal} />
     </nav>
   );
 };

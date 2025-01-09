@@ -15,6 +15,7 @@ import NotificationsPage from "./pages/Notifications/NotificationsPage";
 import CreatePage from "./pages/Create/CreatePage";
 import ProfilePage from "./pages/Profile/ProfilePage";
 import EditProfilePage from "./pages/EditProfilePage/EditProfilePage.jsx";
+import SideNav from "./components/SideNav/SideNav.jsx";
 
 function App() {
   const isAuthenticated = () => {
@@ -33,18 +34,34 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route
-          path="/main"
-          element={<ProtectedRoute element={<Navigate to="/home" />} />}
+          path="*"
+          element={
+            isAuthenticated() ? (
+              <div className="searchContainer">
+                <aside className="navigation">
+                  <SideNav />
+                </aside>
+                <main className="content">
+                  <Routes>
+                    <Route path="/home" element={<MainPage />} />
+                    <Route path="/search" element={<SearchPage />} />
+                    <Route path="/messages" element={<MessagesPage />} />
+                    <Route
+                      path="/notifications"
+                      element={<NotificationsPage />}
+                    />
+                    <Route path="/create" element={<CreatePage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/edit-profile" element={<EditProfilePage />} />
+                    <Route path="*" element={<h1>404 - Page Not Found</h1>} />
+                  </Routes>
+                </main>
+              </div>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
-        <Route path="/home" element={<MainPage />} />
-        <Route path="/search" element={<SearchPage />} />
-        <Route path="/explore" element={<ExplorePage />} />
-        <Route path="/messages" element={<MessagesPage />} />
-        <Route path="/notifications" element={<NotificationsPage />} />
-        <Route path="/create" element={<CreatePage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/edit-profile" element={<EditProfilePage />} />
-        <Route path="*" element={<h1>404 - Page Not Found</h1>} />
       </Routes>
     </Router>
   );

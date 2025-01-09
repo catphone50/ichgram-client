@@ -1,16 +1,7 @@
-import styles from "./ExplorePage.module.css";
-import SideNav from "../../components/SideNav/SideNav";
+//import styles from "./ExplorePage.module.css";
 
 const ExplorePage = () => {
-  return (
-    <div className={styles.searchContainer}>
-      <aside className={styles.navigation}>
-        <SideNav />
-      </aside>
-
-      <main className={styles.content}>Explore Page</main>
-    </div>
-  );
+  return <div>Explore Page</div>;
 };
 
 export default ExplorePage;

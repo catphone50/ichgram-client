@@ -1,5 +1,4 @@
 import styles from "./EditProfile.module.css";
-import SideNav from "../../components/SideNav/SideNav";
 import EditProfile from "../../components/EditProfile/EditProfile";
 import { useEffect } from "react";
 import { getUserInfo } from "../../store/features/users/userActions";
@@ -21,14 +20,8 @@ const EditProfilePage = () => {
   if (error) return <p>Ошибка: {error}</p>;
 
   return (
-    <div className={styles.searchContainer}>
-      <aside className={styles.navigation}>
-        <SideNav />
-      </aside>
-
-      <main className={styles.content}>
-        <EditProfile profile={user} />
-      </main>
+    <div className={styles.container}>
+      <EditProfile profile={user} />
     </div>
   );
 };

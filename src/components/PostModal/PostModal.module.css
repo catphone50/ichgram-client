@@ -1,0 +1,137 @@
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  display: flex;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  max-width: 1000px;
+  width: 100%;
+}
+
+.modalInfo {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.authorInfo {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.authorName {
+  font-weight: bold;
+}
+
+.optionsButton {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.modalBody {
+  display: flex;
+}
+
+.postImage {
+  max-width: 50%;
+  height: auto;
+}
+
+.postDetails {
+  flex: 1;
+}
+
+.likes {
+  margin-bottom: 5px;
+  margin-left: 10px;
+}
+
+.comments {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.comment {
+  display: flex;
+}
+
+.commentAvatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.commentContent {
+  flex: 1;
+}
+
+.commentAuthor {
+  font-weight: bold;
+}
+
+.commentMeta {
+  font-size: 12px;
+}
+
+.addComment {
+  display: flex;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+}
+
+.addComment input {
+  display: flex;
+  flex: 1;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+  margin-bottom: 0;
+}
+
+.addComment button {
+  padding: 5px 10px;
+  color: #007bff;
+  background-color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.postFooter {
+  margin-left: 10px;
+  text-align: left;
+  font-size: 12px;
+  color: gray;
+}

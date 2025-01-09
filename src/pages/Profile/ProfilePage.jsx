@@ -1,34 +1,39 @@
-import styles from "./ProfilePage.module.css";
-import SideNav from "../../components/SideNav/SideNav";
+//import styles from "./ProfilePage.module.css";
 import Profile from "../../components/Profile/Profile";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserInfo } from "../../store/features/users/userActions";
+import { fetchUserPosts } from "../../store/features/posts/postActions";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
-  const { user, isLoggedIn, isLoading, error } = useSelector(
-    (state) => state.user
-  );
+  const {
+    user,
+    isLoggedIn,
+    isLoading: userLoading,
+    error: userError,
+  } = useSelector((state) => state.user);
+
+  const {
+    userPosts,
+    isLoading: postsLoading,
+    error: postsError,
+  } = useSelector((state) => state.posts);
 
   useEffect(() => {
     if (isLoggedIn) {
       dispatch(getUserInfo());
+      dispatch(fetchUserPosts());
     }
   }, [isLoggedIn, dispatch]);
 
-  if (isLoading) return <p>Загрузка...</p>;
-  if (error) return <p>Ошибка: {error}</p>;
+  if (userLoading || postsLoading) return <p>Loading...</p>;
+  if (userError) return <p>Error: {userError}</p>;
+  if (postsError) return <p>Error: {postsError}</p>;
 
   return (
-    <div className={styles.searchContainer}>
-      <aside className={styles.navigation}>
-        <SideNav />
-      </aside>
-
-      <main className={styles.content}>
-        <Profile profile={user} />
-      </main>
+    <div>
+      <Profile profile={user} userPosts={userPosts} />
     </div>
   );
 };
