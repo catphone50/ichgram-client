@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useState } from "react";
 import styles from "./Profile.module.css";
 import { useDispatch } from "react-redux";
@@ -19,7 +18,7 @@ const Profile = ({ profile, userPosts }) => {
   };
 
   const handleEditProfile = () => {
-    // Перенаправить на страницу редактирования профиля
+    navigate("/edit-profile");
   };
 
   const handleExit = () => {
@@ -123,11 +122,12 @@ const Profile = ({ profile, userPosts }) => {
 
       <div className={styles.photoGallery}>
         {posts.length > 0 ? (
-          posts.map((photo, index) => (
+          posts.map((post, index) => (
             <Post
               key={index}
-              image={photo.image}
+              post={post}
               authorAvatar={avatarUrl}
+              authorId={profile.id}
               authorName={profile.username || "No username"}
             />
           ))

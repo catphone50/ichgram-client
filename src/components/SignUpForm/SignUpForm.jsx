@@ -16,7 +16,6 @@ const SignUpForm = () => {
     formState: { errors },
   } = useForm();
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {

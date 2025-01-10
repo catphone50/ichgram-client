@@ -13,6 +13,20 @@ export const fetchPosts = createAsyncThunk(
   }
 );
 
+export const fetchPostsById = createAsyncThunk(
+  "posts/fetchPostsById",
+  async (postId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/posts/${postId}`
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const fetchUserPosts = createAsyncThunk(
   "posts/fetchUserPosts",
   async (_, { rejectWithValue, getState }) => {
@@ -47,9 +61,12 @@ export const createPost = createAsyncThunk(
 
 export const deletePost = createAsyncThunk(
   "posts/deletePost",
-  async (postId, { rejectWithValue }) => {
+  async (postId, { getState, rejectWithValue }) => {
+    const userId = getState().user.user?.id;
     try {
-      await axios.delete(`/api/posts/${postId}`);
+      await axios.delete(`http://localhost:3000/api/posts/${postId}`, {
+        data: { userId },
+      });
       return postId;
     } catch (error) {
       return rejectWithValue(error.response.data);

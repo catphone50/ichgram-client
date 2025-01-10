@@ -5,7 +5,6 @@ import avatar from "../../assets/icons/benutzer.svg";
 import { fileToBase64 } from "../../services/converterToBasw64";
 import { createPost } from "../../store/features/posts/postActions";
 
-// eslint-disable-next-line react/prop-types
 const CreateNewPost = ({ showModal, closeModal }) => {
   const {
     register,

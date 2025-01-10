@@ -1,4 +1,3 @@
-//import styles from "./ProfilePage.module.css";
 import Profile from "../../components/Profile/Profile";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,6 +6,7 @@ import { fetchUserPosts } from "../../store/features/posts/postActions";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
+
   const {
     user,
     isLoggedIn,
@@ -20,20 +20,36 @@ const ProfilePage = () => {
     error: postsError,
   } = useSelector((state) => state.posts);
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      dispatch(getUserInfo());
-      dispatch(fetchUserPosts());
-    }
-  }, [isLoggedIn, dispatch]);
+  console.log("render");
 
+  useEffect(() => {
+    console.log("useEffect");
+
+    if (isLoggedIn) {
+      // Загружаем данные о пользователе, если их нет
+      dispatch(getUserInfo());
+
+      // Загружаем посты пользователя, если их нет
+      if (!userPosts.length) {
+        dispatch(fetchUserPosts());
+      }
+    }
+  }, [isLoggedIn, dispatch, userPosts]);
+
+  // Показать индикатор загрузки, если данные еще не загружены
   if (userLoading || postsLoading) return <p>Loading...</p>;
+
+  // Обработать ошибки
   if (userError) return <p>Error: {userError}</p>;
   if (postsError) return <p>Error: {postsError}</p>;
 
   return (
     <div>
-      <Profile profile={user} userPosts={userPosts} />
+      {user && userPosts.length > 0 ? (
+        <Profile profile={user} userPosts={userPosts} />
+      ) : (
+        <p>No posts available</p>
+      )}
     </div>
   );
 };

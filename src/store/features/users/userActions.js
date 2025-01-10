@@ -14,7 +14,6 @@ export const loginUser = createAsyncThunk(
           },
         }
       );
-
       localStorage.setItem("token", response.data.token);
       return { user: response.data.user, token: response.data.token };
     } catch (error) {

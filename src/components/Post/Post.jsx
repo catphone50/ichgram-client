@@ -1,45 +1,30 @@
 import { useState } from "react";
 import styles from "./Post.module.css";
+
 import PostModal from "../PostModal/PostModal";
 
-const Post = ({
-  image,
-  authorName,
-  authorAvatar,
-  postDate,
-  likes,
-  comments,
-}) => {
+const Post = ({ post }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
 
-  const allComments = comments || [];
-  const likeCount = likes || 0;
-  const postDateFromNow = postDate || "1 day ago";
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <>
       <div className={styles.photo} onClick={openModal}>
         <img
           width={300}
-          src={image}
+          src={post.image || ""}
           alt="User post"
           className={styles.photoImage}
         />
       </div>
-      {isModalOpen && (
-        <PostModal
-          image={image}
-          authorName={authorName}
-          authorAvatar={authorAvatar}
-          postDate={postDateFromNow}
-          likes={likeCount}
-          comments={allComments}
-          onClose={closeModal}
-        />
-      )}
+      <PostModal onClose={closeModal} isOpen={isModalOpen} postId={post._id} />
     </>
   );
 };

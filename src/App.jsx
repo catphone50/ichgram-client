@@ -16,16 +16,15 @@ import CreatePage from "./pages/Create/CreatePage";
 import ProfilePage from "./pages/Profile/ProfilePage";
 import EditProfilePage from "./pages/EditProfilePage/EditProfilePage.jsx";
 import SideNav from "./components/SideNav/SideNav.jsx";
+import { isAuthenticated } from "./services/isAuthenticated.js";
+//import PostModal from "./components/PostModal/PostModal.jsx";
 
 function App() {
-  const isAuthenticated = () => {
-    return localStorage.getItem("token") !== null;
-  };
-
-  // eslint-disable-next-line react/prop-types
   const ProtectedRoute = ({ element }) => {
     return isAuthenticated() ? element : <Navigate to="/login" />;
   };
+
+  console.log("app");
 
   return (
     <Router>
@@ -43,16 +42,44 @@ function App() {
                 </aside>
                 <main className="content">
                   <Routes>
-                    <Route path="/home" element={<MainPage />} />
-                    <Route path="/search" element={<SearchPage />} />
-                    <Route path="/messages" element={<MessagesPage />} />
+                    <Route
+                      path="/home"
+                      element={<ProtectedRoute element={<MainPage />} />}
+                    />
+                    <Route
+                      path="/search"
+                      element={<ProtectedRoute element={<SearchPage />} />}
+                    />
+                    <Route
+                      path="/explore"
+                      element={<ProtectedRoute element={<ExplorePage />} />}
+                    />
+                    <Route
+                      path="/messages"
+                      element={<ProtectedRoute element={<MessagesPage />} />}
+                    />
                     <Route
                       path="/notifications"
-                      element={<NotificationsPage />}
+                      element={
+                        <ProtectedRoute element={<NotificationsPage />} />
+                      }
                     />
-                    <Route path="/create" element={<CreatePage />} />
-                    <Route path="/profile" element={<ProfilePage />} />
-                    <Route path="/edit-profile" element={<EditProfilePage />} />
+                    <Route
+                      path="/create"
+                      element={<ProtectedRoute element={<CreatePage />} />}
+                    />
+                    <Route
+                      path="/profile/:id"
+                      element={<ProtectedRoute element={<ProfilePage />} />}
+                    />
+                    <Route
+                      path="/edit-profile"
+                      element={<ProtectedRoute element={<EditProfilePage />} />}
+                    />
+                    {/* <Route
+                      path="/profile/:authorId/post/:postId"
+                      element={<ProtectedRoute element={<PostModal />} />}
+                    /> */}
                     <Route path="*" element={<h1>404 - Page Not Found</h1>} />
                   </Routes>
                 </main>

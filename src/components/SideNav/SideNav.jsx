@@ -18,10 +18,24 @@ import CreateNewPost from "../CreateNewPost/CreateNewPost";
 import { useState } from "react";
 
 const SideNav = () => {
-  const location = useLocation(); // Получение текущего пути
-  const userProfile = useSelector((state) => state.user.user);
+  const location = useLocation();
+  const { user, isLoading, error } = useSelector((state) => state.user);
 
   const [showModal, setShowModal] = useState(false);
+
+  if (isLoading) {
+    return <div>Загрузка...</div>;
+  }
+
+  if (error) {
+    console.log("error: ", error);
+    return <div>Ошибка: {error.message}</div>;
+  }
+
+  if (!user) {
+    console.log("user: ", user);
+    return <div>Пользователь не найден</div>;
+  }
 
   const openModal = () => {
     setShowModal(true);
@@ -29,6 +43,8 @@ const SideNav = () => {
   const closeModal = () => {
     setShowModal(false);
   };
+
+  const userProfile = user ? user : null;
 
   const navItems = [
     { name: "Home", path: "/home", icon: home, activeIcon: acHome },
@@ -46,7 +62,7 @@ const SideNav = () => {
       icon: notification,
       activeIcon: acNotification,
     },
-    // Изменяем элемент "Create" на кнопку, которая открывает модальное окно
+
     {
       name: "Create",
       component: (
@@ -64,7 +80,7 @@ const SideNav = () => {
     },
     {
       name: "Profile",
-      path: "/profile",
+      path: `/profile/${userProfile?.id}`,
       icon: userProfile?.avatar || profile,
       activeIcon: userProfile?.avatar || profile,
     },
