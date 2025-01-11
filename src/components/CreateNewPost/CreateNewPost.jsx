@@ -49,9 +49,7 @@ const CreateNewPost = ({ showModal, closeModal }) => {
 
     try {
       await dispatch(createPost(postData));
-      setValue("image", null);
-      reset();
-      closeModal();
+      handelCloseModal();
     } catch (error) {
       console.error("Updating profile failed:", error);
     }

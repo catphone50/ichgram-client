@@ -1,10 +1,11 @@
 import { useState } from "react";
 import styles from "./Post.module.css";
-
 import PostModal from "../PostModal/PostModal";
+import { useNavigate } from "react-router-dom";
 
-const Post = ({ post }) => {
+const Post = ({ post, authorId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -12,6 +13,7 @@ const Post = ({ post }) => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+    navigate(`/profile/${authorId}`);
   };
 
   return (

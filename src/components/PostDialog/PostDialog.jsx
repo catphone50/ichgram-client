@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import styles from "./PostDialog.module.css";
 import { deletePost } from "../../store/features/posts/postActions";
 
-const PostDialog = ({ onClose, postId }) => {
+const PostDialog = ({ onClose, postId, onDelete }) => {
   const dispatch = useDispatch();
 
   const handleDelete = () => {
@@ -11,6 +11,7 @@ const PostDialog = ({ onClose, postId }) => {
       onClose();
       return;
     }
+    onDelete();
 
     dispatch(deletePost(postId));
   };

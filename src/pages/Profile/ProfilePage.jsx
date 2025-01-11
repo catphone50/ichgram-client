@@ -9,7 +9,7 @@ const ProfilePage = () => {
 
   const {
     user,
-    isLoggedIn,
+
     isLoading: userLoading,
     error: userError,
   } = useSelector((state) => state.user);
@@ -20,21 +20,14 @@ const ProfilePage = () => {
     error: postsError,
   } = useSelector((state) => state.posts);
 
-  console.log("render");
-
   useEffect(() => {
-    console.log("useEffect");
+    // Загружаем данные о пользователе, если их нет
+    dispatch(getUserInfo());
 
-    if (isLoggedIn) {
-      // Загружаем данные о пользователе, если их нет
-      dispatch(getUserInfo());
+    // Загружаем посты пользователя, если их нет
 
-      // Загружаем посты пользователя, если их нет
-      if (!userPosts.length) {
-        dispatch(fetchUserPosts());
-      }
-    }
-  }, [isLoggedIn, dispatch, userPosts]);
+    dispatch(fetchUserPosts());
+  }, []);
 
   // Показать индикатор загрузки, если данные еще не загружены
   if (userLoading || postsLoading) return <p>Loading...</p>;

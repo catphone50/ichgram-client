@@ -5,10 +5,19 @@ import { logout } from "../../store/features/users/userSlice";
 import { useNavigate } from "react-router-dom";
 import avatar from "../../assets/icons/benutzer.svg";
 import Post from "../Post/Post";
+import { useEffect } from "react";
 
 const Profile = ({ profile, userPosts }) => {
   const isMyProfile = true;
   const [isDescriptionExpanded, setDescriptionExpanded] = useState(false);
+  const [posts, setPosts] = useState(userPosts || []);
+
+  useEffect(() => {
+    if (userPosts) {
+      setPosts(userPosts);
+      console.log("posts: ", userPosts);
+    }
+  }, [userPosts]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -36,7 +45,6 @@ const Profile = ({ profile, userPosts }) => {
   const followersCount = profile.followersCount || 0; // Если количество подписчиков отсутствует
   const followingCount = profile.followingCount || 0; // Если количество подписок отсутствует
   const socialLinks = profile.socialLinks || []; // Если нет социальных ссылок
-  const posts = userPosts || []; // Если нет постов
 
   // Логика для сокращения описания
   const isDescriptionLong = description.length > 255;
@@ -122,14 +130,8 @@ const Profile = ({ profile, userPosts }) => {
 
       <div className={styles.photoGallery}>
         {posts.length > 0 ? (
-          posts.map((post, index) => (
-            <Post
-              key={index}
-              post={post}
-              authorAvatar={avatarUrl}
-              authorId={profile.id}
-              authorName={profile.username || "No username"}
-            />
+          posts.map((post) => (
+            <Post key={post._id} post={post} authorId={profile.id} />
           ))
         ) : (
           <p>No photos</p>

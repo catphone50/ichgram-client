@@ -2,10 +2,14 @@ import { useEffect, useState } from "react";
 import PostDialog from "../PostDialog/PostDialog";
 import styles from "./PostModal.module.css";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const PostModal = ({ onClose, postId, isOpen }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const [post, setPost] = useState(null);
+
+  const navigate = useNavigate();
 
   const userPosts = useSelector((state) => state.posts.userPosts);
   const isLoading = useSelector((state) => state.posts.isLoading);
@@ -15,6 +19,10 @@ const PostModal = ({ onClose, postId, isOpen }) => {
   const closeDialog = () => {
     setIsDialogOpen(false);
   };
+
+  useEffect(() => {
+    isOpen && navigate(`post/${postId}`);
+  }, [isOpen, navigate, postId]);
 
   useEffect(() => {
     if (userPosts && postId) {
@@ -118,7 +126,12 @@ const PostModal = ({ onClose, postId, isOpen }) => {
         </div>
       </div>
       {isDialogOpen && (
-        <PostDialog onClose={closeDialog} postId={post._id} userId={user.id} />
+        <PostDialog
+          onClose={closeDialog}
+          onDelete={onClose}
+          postId={post._id}
+          userId={user.id}
+        />
       )}
     </div>
   );

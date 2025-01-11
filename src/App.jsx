@@ -17,14 +17,15 @@ import ProfilePage from "./pages/Profile/ProfilePage";
 import EditProfilePage from "./pages/EditProfilePage/EditProfilePage.jsx";
 import SideNav from "./components/SideNav/SideNav.jsx";
 import { isAuthenticated } from "./services/isAuthenticated.js";
-//import PostModal from "./components/PostModal/PostModal.jsx";
+import store from "./store/store.js";
+import PostModal from "./components/PostModal/PostModal.jsx";
+
+const ProtectedRoute = ({ element }) => {
+  return isAuthenticated() ? element : <Navigate to="/login" />;
+};
 
 function App() {
-  const ProtectedRoute = ({ element }) => {
-    return isAuthenticated() ? element : <Navigate to="/login" />;
-  };
-
-  console.log("app");
+  console.log("Текущее состояние стора:", store.getState());
 
   return (
     <Router>
@@ -71,15 +72,17 @@ function App() {
                     <Route
                       path="/profile/:id"
                       element={<ProtectedRoute element={<ProfilePage />} />}
-                    />
+                    >
+                      <Route
+                        path="post/:postId"
+                        element={<ProtectedRoute element={<PostModal />} />}
+                      />
+                    </Route>
                     <Route
                       path="/edit-profile"
                       element={<ProtectedRoute element={<EditProfilePage />} />}
                     />
-                    {/* <Route
-                      path="/profile/:authorId/post/:postId"
-                      element={<ProtectedRoute element={<PostModal />} />}
-                    /> */}
+
                     <Route path="*" element={<h1>404 - Page Not Found</h1>} />
                   </Routes>
                 </main>
