@@ -17,9 +17,38 @@ const initialState = {
   token: "",
 };
 
+const loadStateFromLocalStorage = () => {
+  try {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (token && user) {
+      return {
+        user: {
+          avatar: user.avatar,
+          description: "",
+          id: user.id,
+          fullName: "",
+          email: "",
+          username: user.username,
+          createdAt: "",
+        },
+        isLoading: false,
+        error: null,
+        isLoggedIn: true,
+        token,
+      };
+    }
+    return initialState;
+  } catch (error) {
+    console.error("Error loading state from localStorage", error);
+    return initialState;
+  }
+};
+
 const userSlice = createSlice({
   name: "user",
-  initialState,
+  initialState: loadStateFromLocalStorage(),
   reducers: {
     logout: (state) => {
       state.user = null;

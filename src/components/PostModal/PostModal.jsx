@@ -1,24 +1,38 @@
 import { useEffect, useState } from "react";
 import PostDialog from "../PostDialog/PostDialog";
 import styles from "./PostModal.module.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import {
+  addComment,
+  getCommentsByPost,
+} from "../../store/features/comments/commentsActions";
+import Comment from "../Comment/Comment";
 
 const PostModal = ({ onClose, postId, isOpen }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
   const [post, setPost] = useState(null);
+  const [commentText, setCommentText] = useState("");
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const userPosts = useSelector((state) => state.posts.userPosts);
   const isLoading = useSelector((state) => state.posts.isLoading);
   const error = useSelector((state) => state.posts.error);
   const user = useSelector((state) => state.user.user);
 
+  const isLoadingComments = useSelector((state) => state.comments.isLoading);
+  const commentsError = useSelector((state) => state.comments.error);
+  const comments = useSelector((state) => state.comments.comments);
+
   const closeDialog = () => {
     setIsDialogOpen(false);
   };
+
+  useEffect(() => {
+    dispatch(getCommentsByPost(postId));
+  }, [dispatch, postId]);
 
   useEffect(() => {
     isOpen && navigate(`post/${postId}`);
@@ -35,6 +49,17 @@ const PostModal = ({ onClose, postId, isOpen }) => {
   if (!isOpen) {
     return null;
   }
+
+  const handlePost = () => {
+    const newComment = {
+      userId: user.id,
+      postId: postId,
+      text: commentText,
+    };
+
+    dispatch(addComment(newComment));
+    setCommentText("");
+  };
 
   const handleOptionsClick = () => {
     setIsDialogOpen(true);
@@ -55,7 +80,6 @@ const PostModal = ({ onClose, postId, isOpen }) => {
     return <div>Пост не найден</div>;
   }
 
-  const comments = post.comments || [];
   const likes = post.likes || [];
 
   return (
@@ -80,47 +104,53 @@ const PostModal = ({ onClose, postId, isOpen }) => {
             </button>
           </div>
           <div className={styles.modalBody}>
-            <div className={styles.postDetails}>
+            <div className={styles.postInfoContainer}>
+              <div className={styles.postDescription}>
+                <img src={user.avatar} alt="User avatar" />
+
+                <div className={styles.descriptionText}>
+                  <p className={styles.postAuthor}>{user.username}</p>
+                  <p>{post.description}</p>
+                </div>
+                <div className={styles.descriptionFooter}>
+                  <p className={styles.descriptionDate}>{post.date}</p>
+                </div>
+              </div>
+
               <div className={styles.comments}>
-                {comments.length > 0 ? (
-                  comments.map((comment, index) => (
-                    <div key={index} className={styles.comment}>
-                      <img
-                        src={comment.avatar}
-                        alt={comment.author}
-                        className={styles.commentAvatar}
-                      />
-                      <div className={styles.commentContent}>
-                        <span className={styles.commentAuthor}>
-                          {comment.author}
-                        </span>
-                        <span className={styles.commentText}>
-                          {comment.text}
-                        </span>
-                        <div className={styles.commentMeta}>
-                          <span>{comment.date}</span>
-                          <span>{comment.likes}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p>No comments available</p>
+                {isLoadingComments && <p>Loading comments...</p>}
+                {commentsError && (
+                  <p>Error loading comments: {commentsError.message}</p>
                 )}
+                {comments.length > 0 &&
+                  comments.map((comment, index) => (
+                    <Comment key={index} comment={comment} />
+                  ))}
               </div>
+            </div>
 
-              <div className={styles.likes}>
-                <span>Likes: {likes.length}</span>
-              </div>
+            <div className={styles.likes}>
+              <span>Likes: {likes.length}</span>
+            </div>
 
-              <div className={styles.postFooter}>
-                <span>{post.createdAt}</span>
-              </div>
+            <div className={styles.postFooter}>
+              <span>{post.createdAt}</span>
+            </div>
 
-              <div className={styles.addComment}>
-                <input type="text" placeholder="Add a comment..." />
-                <button>Post</button>
-              </div>
+            <div className={styles.addComment}>
+              <input
+                type="text"
+                placeholder="Add a comment..."
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+              />
+              <button
+                type="submit"
+                className={styles.postButton}
+                onClick={handlePost}
+              >
+                Post
+              </button>
             </div>
           </div>
         </div>

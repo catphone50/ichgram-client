@@ -15,7 +15,6 @@ const Profile = ({ profile, userPosts }) => {
   useEffect(() => {
     if (userPosts) {
       setPosts(userPosts);
-      console.log("posts: ", userPosts);
     }
   }, [userPosts]);
 

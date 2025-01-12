@@ -20,6 +20,45 @@
   width: 100%;
 }
 
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 10px;
+  border-right: 1px solid #ccc;
+}
+
+.postDescription {
+  display: flex;
+  padding: 5px;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+}
+
+.postDescription img {
+  margin: 2px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.postAuthor {
+  font-size: 15px;
+  font-weight: 600;
+  margin-left: 15px;
+  margin-right: 10px;
+}
+
+.descriptionText {
+  display: flex;
+}
+
+.commentContainer {
+  display: flex;
+  overflow: hidden;
+}
+
 .modalInfo {
   width: 100%;
   display: flex;
@@ -60,6 +99,7 @@
 
 .modalBody {
   display: flex;
+  height: 100%;
 }
 
 .postImage {
@@ -74,11 +114,13 @@
 .likes {
   margin-bottom: 5px;
   margin-left: 10px;
+  font-size: 20px;
 }
 
 .comments {
-  max-height: 200px;
+  height: 100%;
   overflow-y: auto;
+  max-height: 250px;
 }
 
 .comment {

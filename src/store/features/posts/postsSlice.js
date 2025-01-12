@@ -58,7 +58,7 @@ const postSlice = createSlice({
         state.error = null;
       })
       .addCase(createPost.fulfilled, (state, action) => {
-        state.userPosts.push(action.payload.post);
+        state.userPosts.unshift(action.payload.post);
         state.isLoading = false;
       })
       .addCase(createPost.rejected, (state, action) => {
@@ -72,6 +72,7 @@ const postSlice = createSlice({
         state.error = null;
       })
       .addCase(deletePost.fulfilled, (state, action) => {
+        console.log(action.payload);
         state.userPosts = state.userPosts.filter(
           (post) => post._id !== action.payload
         );

@@ -11,10 +11,10 @@ const PostDialog = ({ onClose, postId, onDelete }) => {
       onClose();
       return;
     }
-    onDelete();
-
     dispatch(deletePost(postId));
+    onDelete();
   };
+
   const handleEdit = () => {};
   const handleGoToPost = () => {};
   const handleCopyLink = () => {};

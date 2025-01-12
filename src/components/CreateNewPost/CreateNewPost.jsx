@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import avatar from "../../assets/icons/benutzer.svg";
 import { fileToBase64 } from "../../services/converterToBasw64";
 import { createPost } from "../../store/features/posts/postActions";
+import imageCompression from "browser-image-compression";
 
 const CreateNewPost = ({ showModal, closeModal }) => {
+  console.log("CreateNewPost component rendered");
   const {
     register,
     handleSubmit,
@@ -26,10 +28,24 @@ const CreateNewPost = ({ showModal, closeModal }) => {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
+    console.log("handleFileChange called");
     const file = event.target.files[0];
+    console.log("file", file);
     if (file) {
-      setValue("image", file, { shouldValidate: true });
+      const options = {
+        maxSizeMB: 0.05, // Максимальный размер 100 КБ
+        maxWidthOrHeight: 1024,
+        useWebWorker: true,
+      };
+
+      try {
+        const compressedFile = await imageCompression(file, options);
+        console.log("litlefile", compressedFile);
+        setValue("image", compressedFile, { shouldValidate: true });
+      } catch (error) {
+        console.error("Error compressing file:", error);
+      }
     }
   };
 
@@ -78,7 +94,10 @@ const CreateNewPost = ({ showModal, closeModal }) => {
             <input
               type="file"
               accept="image/*"
-              onChange={handleFileChange}
+              onChange={(event) => {
+                console.log("onChange triggered");
+                handleFileChange(event);
+              }}
               {...register("image", { required: "Please upload an image." })}
               style={{ display: "none" }}
               className={styles.fileInput}

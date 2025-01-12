@@ -14,7 +14,10 @@ export const loginUser = createAsyncThunk(
           },
         }
       );
+
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+
       return { user: response.data.user, token: response.data.token };
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
@@ -52,10 +55,10 @@ export const getUserInfo = createAsyncThunk(
 
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/user/${userId}`
-        // {
-        //   headers: { Authorization: `Bearer ${token}` },
-        // }
+        `http://localhost:3000/api/user/${userId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
 
       return response.data;
@@ -81,10 +84,10 @@ export const updateUserInfo = createAsyncThunk(
     try {
       const response = await axios.put(
         `http://localhost:3000/api/user/${userId}`,
-        userData
-        // {
-        //   headers: { Authorization: `Bearer ${token}` },
-        // }
+        userData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
 
       return response.data;

@@ -17,7 +17,7 @@ import ProfilePage from "./pages/Profile/ProfilePage";
 import EditProfilePage from "./pages/EditProfilePage/EditProfilePage.jsx";
 import SideNav from "./components/SideNav/SideNav.jsx";
 import { isAuthenticated } from "./services/isAuthenticated.js";
-import store from "./store/store.js";
+//import store from "./store/store.js";
 import PostModal from "./components/PostModal/PostModal.jsx";
 
 const ProtectedRoute = ({ element }) => {
@@ -25,7 +25,7 @@ const ProtectedRoute = ({ element }) => {
 };
 
 function App() {
-  console.log("Текущее состояние стора:", store.getState());
+  // console.log("Текущее состояние стора:", store.getState());
 
   return (
     <Router>

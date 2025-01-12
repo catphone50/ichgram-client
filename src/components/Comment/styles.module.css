@@ -1,0 +1,24 @@
+.commentContainer {
+  display: flex;
+  padding: 5px;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+}
+
+.commentContainer img {
+  margin: 2px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.commentAuthor {
+  font-size: 15px;
+  font-weight: 600;
+  margin-left: 15px;
+  margin-right: 10px;
+}
+
+.commentText {
+  display: flex;
+}

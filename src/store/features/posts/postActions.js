@@ -31,6 +31,11 @@ export const fetchUserPosts = createAsyncThunk(
   "posts/fetchUserPosts",
   async (_, { rejectWithValue, getState }) => {
     const userId = getState().user.user?.id;
+
+    if (!userId) {
+      return rejectWithValue("No user ID found");
+    }
+
     try {
       const response = await axios.get(
         `http://localhost:3000/api/posts/user/${userId}`
@@ -46,11 +51,22 @@ export const createPost = createAsyncThunk(
   "posts/createPost",
   async (post, { rejectWithValue, getState }) => {
     const userId = getState().user.user?.id;
+    const token = getState().user.token;
+
+    if (!token) {
+      return rejectWithValue("No token found");
+    }
+    if (!userId) {
+      return rejectWithValue("No user ID found");
+    }
 
     try {
       const response = await axios.post(
         `http://localhost:3000/api/posts/${userId}`,
-        post
+        post,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       return response.data;
     } catch (error) {
@@ -63,10 +79,22 @@ export const deletePost = createAsyncThunk(
   "posts/deletePost",
   async (postId, { getState, rejectWithValue }) => {
     const userId = getState().user.user?.id;
+    const token = getState().user.token;
+
+    if (!token) {
+      return rejectWithValue("No token found");
+    }
+    if (!userId) {
+      return rejectWithValue("No user ID found");
+    }
+
     try {
       await axios.delete(`http://localhost:3000/api/posts/${postId}`, {
+        headers: { Authorization: `Bearer ${token}` },
         data: { userId },
       });
+
+      console.log("Post deleted successfully", postId);
       return postId;
     } catch (error) {
       return rejectWithValue(error.response.data);

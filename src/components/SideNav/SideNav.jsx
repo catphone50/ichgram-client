@@ -120,7 +120,9 @@ const SideNav = () => {
           )
         )}
       </ul>
-      <CreateNewPost showModal={showModal} closeModal={closeModal} />
+      {showModal && (
+        <CreateNewPost showModal={showModal} closeModal={closeModal} />
+      )}
     </nav>
   );
 };

@@ -26,7 +26,13 @@ const Post = ({ post, authorId }) => {
           className={styles.photoImage}
         />
       </div>
-      <PostModal onClose={closeModal} isOpen={isModalOpen} postId={post._id} />
+      {isModalOpen && (
+        <PostModal
+          onClose={closeModal}
+          isOpen={isModalOpen}
+          postId={post._id}
+        />
+      )}
     </>
   );
 };
