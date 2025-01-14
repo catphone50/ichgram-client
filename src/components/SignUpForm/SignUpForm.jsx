@@ -1,28 +1,50 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   validateEmail,
   validateUsername,
 } from "../../services/validationService";
 import { registerUser } from "../../store/features/users/userActions";
+import { clearError } from "../../store/features/users/userSlice";
 
 import styles from "./SignUpForm.module.css";
+import { useEffect } from "react";
 
 const SignUpForm = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    watch,
+  } = useForm({
+    mode: "onChange",
+  });
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { error } = useSelector((state) => state.user);
+
+  const emailValue = watch("email");
+  const usernameValue = watch("username");
+
+  useEffect(() => {
+    if (emailValue || usernameValue) {
+      dispatch(clearError());
+    }
+  }, [emailValue, usernameValue, dispatch]);
+
   const onSubmit = async (data) => {
     try {
-      await dispatch(registerUser(data));
-
-      navigate("/login");
+      const resultAction = await dispatch(registerUser(data));
+      if (registerUser.fulfilled.match(resultAction)) {
+        navigate("/login");
+      } else {
+        console.error(
+          "Registration failed:",
+          resultAction.payload || resultAction.error
+        );
+      }
     } catch (error) {
       console.error("Registration failed:", error);
     }
@@ -92,6 +114,7 @@ const SignUpForm = () => {
       {errors.password && (
         <span className={styles.error}>{errors.password.message}</span>
       )}
+      {error && <span className={styles.error}>{error}</span>}
 
       <div className={styles.info}>
         <p>

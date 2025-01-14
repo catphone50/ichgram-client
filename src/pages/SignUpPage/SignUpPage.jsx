@@ -15,7 +15,7 @@ const SignUpPage = () => {
       <div className={styles.loginContainer}>
         <div className={styles.signupLink}>
           <p>
-            Have an account? <a href="/signup">Log in</a>
+            Have an account? <a href="/login">Log in</a>
           </p>
         </div>
       </div>

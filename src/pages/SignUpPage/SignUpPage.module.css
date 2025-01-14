@@ -6,6 +6,7 @@
   padding: 0 40px;
   padding-bottom: 30px;
   width: 100%;
+  max-width: 500px;
 }
 
 .aboutUs {
@@ -23,6 +24,7 @@
   width: 100%;
   border: 1px solid #dbdbdb;
   margin-top: 15px;
+  max-width: 500px;
 }
 
 .signupLink {

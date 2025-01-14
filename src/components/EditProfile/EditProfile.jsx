@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import styles from "./EditProfile.module.css";
 import avatar from "../../assets/icons/benutzer.svg";
+import Compressor from "compressorjs";
 import {
   validateEmail,
   validateUsername,
@@ -13,6 +14,7 @@ import { fileToBase64 } from "../../services/converterToBasw64";
 
 const EditProfile = ({ profile }) => {
   const [avatarBase64, setAvatarBase64] = useState(profile.avatar || avatar);
+
   const {
     register,
     handleSubmit,
@@ -35,24 +37,31 @@ const EditProfile = ({ profile }) => {
     data.avatar = avatarBase64;
     try {
       await dispatch(updateUserInfo(data));
-      navigate("/profile");
+      navigate(`/profile/${profile.id}`);
     } catch (error) {
       console.error("Updating profile failed:", error);
     }
   };
 
   const handleCancel = () => {
-    navigate("/profile");
+    navigate(`/profile/${profile.id}`);
   };
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      const base64 = await fileToBase64(file);
-      setAvatarBase64(base64);
+      new Compressor(file, {
+        quality: 0.6,
+        success: async (compressedResult) => {
+          const base64 = await fileToBase64(compressedResult);
+          setAvatarBase64(base64);
+        },
+        error(err) {
+          console.error(err.message);
+        },
+      });
     }
   };
-
   React.useEffect(() => {
     setValue("avatarUrl", profile.avatar || avatar);
   }, [profile.avatar, setValue]);

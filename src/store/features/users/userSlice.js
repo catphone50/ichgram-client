@@ -51,10 +51,15 @@ const userSlice = createSlice({
   initialState: loadStateFromLocalStorage(),
   reducers: {
     logout: (state) => {
-      state.user = null;
+      state.user = { ...initialState.user };
       state.isLoggedIn = false;
       state.token = "";
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
+    },
+    clearError: (state) => {
+      console.log("Clearing error");
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -81,9 +86,7 @@ const userSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(registerUser.fulfilled, (state, action) => {
-        state.user.id = action.payload.user.id;
-        state.user.username = action.payload.user.username;
+      .addCase(registerUser.fulfilled, (state) => {
         state.isLoading = false;
         state.isLoggedIn = true;
       })
@@ -110,6 +113,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { logout } = userSlice.actions;
+export const { logout, clearError } = userSlice.actions;
 
 export default userSlice.reducer;

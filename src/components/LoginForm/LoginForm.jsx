@@ -7,33 +7,48 @@ import {
 } from "../../services/validationService";
 import styles from "./LoginForm.module.css";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const LoginForm = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    mode: "onChange",
+  });
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState(null);
+  const usernameValue = watch("emailOrUsername");
+  const passValue = watch("password");
 
   const onSubmit = async (data) => {
     try {
-      const response = await dispatch(loginUser(data));
+      const resultAction = await dispatch(loginUser(data));
+      console.log(data);
 
-      if (!response.payload.user) {
-        setErrorMessage("Login or password is incorrect");
-        return;
+      if (loginUser.fulfilled.match(resultAction)) {
+        console.log("Login successful");
+        navigate("/home");
+      } else {
+        console.error(
+          "Login failed:",
+          setErrorMessage(resultAction.payload || resultAction.error)
+        );
       }
-
-      navigate("/home");
     } catch (error) {
       console.error("Login failed:", error);
       setErrorMessage("Login or password is incorrect");
     }
   };
+
+  useEffect(() => {
+    if (usernameValue || passValue) {
+      setErrorMessage(null);
+    }
+  }, [usernameValue, passValue, dispatch]);
 
   return (
     <form className={styles.loginForm} onSubmit={handleSubmit(onSubmit)}>

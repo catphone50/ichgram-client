@@ -5,7 +5,8 @@ export const fetchPosts = createAsyncThunk(
   "posts/fetchPosts",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get("/api/posts");
+      const response = await axios.get("http://localhost:3000/api/posts/posts");
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -40,6 +41,7 @@ export const fetchUserPosts = createAsyncThunk(
       const response = await axios.get(
         `http://localhost:3000/api/posts/user/${userId}`
       );
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -101,3 +103,5 @@ export const deletePost = createAsyncThunk(
     }
   }
 );
+
+// console.log("action", response.data);

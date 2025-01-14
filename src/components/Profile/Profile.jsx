@@ -1,25 +1,59 @@
 import { useState } from "react";
 import styles from "./Profile.module.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/features/users/userSlice";
 import { useNavigate } from "react-router-dom";
 import avatar from "../../assets/icons/benutzer.svg";
 import Post from "../Post/Post";
 import { useEffect } from "react";
+import { fetchUserPosts } from "../../store/features/posts/postActions";
+import { getUserInfo } from "../../store/features/users/userActions";
 
-const Profile = ({ profile, userPosts }) => {
+const Profile = () => {
   const isMyProfile = true;
   const [isDescriptionExpanded, setDescriptionExpanded] = useState(false);
-  const [posts, setPosts] = useState(userPosts || []);
+  const [posts, setPosts] = useState([]);
+  const [postsCount, setPostsCount] = useState(0);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const {
+    userPosts,
+    isLoading: postsLoading,
+    error: postsError,
+  } = useSelector((state) => state.posts);
+  const {
+    user: profile,
+    isLoading: userLoading,
+    error: userError,
+  } = useSelector((state) => state.user);
+
+  const description = profile.description || ""; // Описание по умолчанию
+  const followersCount = profile.followersCount || 0; // Если количество подписчиков отсутствует
+  const followingCount = profile.followingCount || 0; // Если количество подписок отсутствует
+  const socialLinks = profile.socialLinks || []; // Если нет социальных ссылок
+
+  useEffect(() => {
+    dispatch(getUserInfo());
+    dispatch(fetchUserPosts());
+  }, []);
+
+  useEffect(() => {
+    if (userPosts) {
+      dispatch(fetchUserPosts()).then((response) => {
+        setPostsCount(response.payload.length || 0);
+      });
+    }
+  }, [dispatch, userPosts.length]);
+
+  console.log(postsError);
 
   useEffect(() => {
     if (userPosts) {
       setPosts(userPosts);
     }
   }, [userPosts]);
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleDescriptionToggle = () => {
     setDescriptionExpanded(!isDescriptionExpanded);
@@ -38,22 +72,27 @@ const Profile = ({ profile, userPosts }) => {
     return <p>Loading profile...</p>;
   }
 
-  const avatarUrl = profile.avatar || avatar; // Используем дефолтный аватар
-  const description = profile.description || ""; // Описание по умолчанию
-  const postsCount = profile.postsCount || 0; // Если количество постов отсутствует
-  const followersCount = profile.followersCount || 0; // Если количество подписчиков отсутствует
-  const followingCount = profile.followingCount || 0; // Если количество подписок отсутствует
-  const socialLinks = profile.socialLinks || []; // Если нет социальных ссылок
-
   // Логика для сокращения описания
   const isDescriptionLong = description.length > 255;
   const truncatedDescription =
     description.slice(0, 255) + (isDescriptionLong ? "..." : "");
 
+  //  if (postsError) return <p>Error: {postsError.message}</p>;
+  if (postsLoading) return <p>Loading...</p>;
+  // Показать индикатор загрузки, если данные еще не загружены
+  if (userLoading) return <p>Loading...</p>;
+
+  // Обработать ошибки
+  if (userError) return <p>Error: {userError.message}</p>;
+
   return (
     <>
       <div className={styles.profileHeader}>
-        <img src={avatarUrl} alt="Avatar" className={styles.avatar} />
+        <img
+          src={profile.avatar || avatar}
+          alt="Avatar"
+          className={styles.avatar}
+        />
         <div className={styles.profileInfo}>
           <div className={styles.profileHeaderName}>
             <h2 className={styles.username}>
@@ -68,7 +107,7 @@ const Profile = ({ profile, userPosts }) => {
                   Edit profile
                 </button>
                 <button
-                  className={styles.editProfileButton}
+                  className={styles.exitProfileButton}
                   onClick={handleExit}
                 >
                   Exit
@@ -130,7 +169,7 @@ const Profile = ({ profile, userPosts }) => {
       <div className={styles.photoGallery}>
         {posts.length > 0 ? (
           posts.map((post) => (
-            <Post key={post._id} post={post} authorId={profile.id} />
+            <Post key={post._id} post={post} goTo={`/profile/${profile.id}`} />
           ))
         ) : (
           <p>No photos</p>

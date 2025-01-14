@@ -19,6 +19,7 @@ import SideNav from "./components/SideNav/SideNav.jsx";
 import { isAuthenticated } from "./services/isAuthenticated.js";
 //import store from "./store/store.js";
 import PostModal from "./components/PostModal/PostModal.jsx";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage/index.jsx";
 
 const ProtectedRoute = ({ element }) => {
   return isAuthenticated() ? element : <Navigate to="/login" />;
@@ -33,6 +34,7 @@ function App() {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route
           path="*"
           element={
@@ -46,7 +48,12 @@ function App() {
                     <Route
                       path="/home"
                       element={<ProtectedRoute element={<MainPage />} />}
-                    />
+                    >
+                      <Route
+                        path="post/:postId"
+                        element={<ProtectedRoute element={<PostModal />} />}
+                      />
+                    </Route>
                     <Route
                       path="/search"
                       element={<ProtectedRoute element={<SearchPage />} />}

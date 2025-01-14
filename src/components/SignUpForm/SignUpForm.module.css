@@ -23,6 +23,8 @@
   font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
+  text-decoration: none;
+  text-align: center;
 }
 
 .loginBtn:hover {

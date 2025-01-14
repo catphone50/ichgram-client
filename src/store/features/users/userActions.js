@@ -96,3 +96,11 @@ export const updateUserInfo = createAsyncThunk(
     }
   }
 );
+
+// В файле userActions.js
+export const clearError = () => {
+  console.log("Clearing error");
+  return {
+    type: "CLEAR_ERROR",
+  };
+};

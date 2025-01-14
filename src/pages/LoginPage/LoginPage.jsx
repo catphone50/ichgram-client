@@ -25,7 +25,7 @@ const LoginPage = () => {
             <p>OR</p>
             <span></span>
           </div>
-          <a href="#" className={styles.forgotPassword}>
+          <a href="/forgot-password" className={styles.forgotPassword}>
             Forgot password?
           </a>
         </div>
