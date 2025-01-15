@@ -83,7 +83,11 @@ function App() {
                     />
                     <Route
                       path="/profile/:id"
-                      element={<ProtectedRoute element={<ProfilePage />} />}
+                      element={
+                        <PostModalProvider>
+                          <ProtectedRoute element={<ProfilePage />} />
+                        </PostModalProvider>
+                      }
                     >
                       <Route
                         path="post/:postId"

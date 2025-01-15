@@ -1,57 +1,26 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import styles from "./Profile.module.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { logout } from "../../store/features/users/userSlice";
 import { useNavigate } from "react-router-dom";
 import avatar from "../../assets/icons/benutzer.svg";
 import Post from "../Post/Post";
-import { useEffect } from "react";
-import { fetchUserPosts } from "../../store/features/posts/postActions";
-import { getUserInfo } from "../../store/features/users/userActions";
+import { PostModalContext } from "../PostModalContext";
+import PostModal from "../PostModal/PostModal";
 
-const Profile = () => {
-  const isMyProfile = true;
+const Profile = ({ profile }) => {
+  const { isModalOpen, closeModal, postsCount } = useContext(PostModalContext);
+
   const [isDescriptionExpanded, setDescriptionExpanded] = useState(false);
-  const [posts, setPosts] = useState([]);
-  const [postsCount, setPostsCount] = useState(0);
 
-  const dispatch = useDispatch();
+  const followersCount = 0;
+  const followingCount = 0;
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const {
-    userPosts,
-    isLoading: postsLoading,
-    error: postsError,
-  } = useSelector((state) => state.posts);
-  const {
-    user: profile,
-    isLoading: userLoading,
-    error: userError,
-  } = useSelector((state) => state.user);
-
-  const description = profile.description || ""; // Описание по умолчанию
-  const followersCount = profile.followersCount || 0; // Если количество подписчиков отсутствует
-  const followingCount = profile.followingCount || 0; // Если количество подписок отсутствует
-  const socialLinks = profile.socialLinks || []; // Если нет социальных ссылок
-
-  useEffect(() => {
-    dispatch(getUserInfo());
-    dispatch(fetchUserPosts());
-  }, []);
-
-  useEffect(() => {
-    if (userPosts) {
-      dispatch(fetchUserPosts()).then((response) => {
-        setPostsCount(response.payload.length || 0);
-      });
-    }
-  }, [dispatch, userPosts.length]);
-
-  useEffect(() => {
-    if (userPosts) {
-      setPosts(userPosts);
-    }
-  }, [userPosts]);
+  const isMyProfile =
+    profile.id === JSON.parse(localStorage.getItem("user")).id;
 
   const handleDescriptionToggle = () => {
     setDescriptionExpanded(!isDescriptionExpanded);
@@ -71,17 +40,9 @@ const Profile = () => {
   }
 
   // Логика для сокращения описания
-  const isDescriptionLong = description.length > 255;
+  const isDescriptionLong = profile.description?.length > 255;
   const truncatedDescription =
-    description.slice(0, 255) + (isDescriptionLong ? "..." : "");
-
-  //  if (postsError) return <p>Error: {postsError.message}</p>;
-  if (postsLoading) return <p>Loading...</p>;
-  // Показать индикатор загрузки, если данные еще не загружены
-  if (userLoading) return <p>Loading...</p>;
-
-  // Обработать ошибки
-  if (userError || postsError) return <p>Error: {userError.message}</p>;
+    profile.description?.slice(0, 255) + (isDescriptionLong ? "..." : "");
 
   return (
     <>
@@ -130,7 +91,9 @@ const Profile = () => {
             <p>
               {isDescriptionLong ? (
                 <>
-                  {isDescriptionExpanded ? description : truncatedDescription}
+                  {isDescriptionExpanded
+                    ? profile.description
+                    : truncatedDescription}
                   <button
                     onClick={handleDescriptionToggle}
                     className={styles.toggleDescription}
@@ -139,14 +102,14 @@ const Profile = () => {
                   </button>
                 </>
               ) : (
-                description
+                profile.description
               )}
             </p>
           </div>
 
           <div className={styles.socialLinks}>
-            {socialLinks.length > 0 ? (
-              socialLinks.map((link) => (
+            {profile.socialLinks?.length > 0 ? (
+              profile.socialLinks.map((link) => (
                 <a
                   key={link.platform}
                   href={link.url}
@@ -162,11 +125,12 @@ const Profile = () => {
             )}
           </div>
         </div>
+        {isModalOpen && <PostModal onClose={closeModal} />}
       </div>
 
       <div className={styles.photoGallery}>
-        {posts.length > 0 ? (
-          posts.map((post) => <Post key={post._id} post={post} />)
+        {profile.posts?.length > 0 ? (
+          profile.posts.map((post) => <Post key={post._id} post={post} />)
         ) : (
           <p>No photos</p>
         )}

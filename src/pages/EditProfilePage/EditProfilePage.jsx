@@ -13,7 +13,7 @@ const EditProfilePage = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      dispatch(getUserInfo());
+      dispatch(getUserInfo(user.id));
     }
   }, [isLoggedIn, dispatch]);
 

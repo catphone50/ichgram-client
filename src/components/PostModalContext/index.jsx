@@ -7,6 +7,7 @@ import {
   fetchPostsById,
 } from "../../store/features/posts/postActions";
 import { useNavigate, useParams } from "react-router-dom";
+import { getUserWithPosts } from "../../store/features/users/userActions";
 
 const PostModalContext = createContext();
 
@@ -16,6 +17,7 @@ const PostModalProvider = ({ children }) => {
   const [selectedPostId, setSelectedPostId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDescriptionExpanded, setDescriptionExpanded] = useState(false);
+  const [postsCount, setPostsCount] = useState(0);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -36,6 +38,10 @@ const PostModalProvider = ({ children }) => {
       setSelectedPostId(post._id);
     }
   }, []);
+
+  useEffect(() => {
+    setPostsCount(user.posts?.length);
+  }, [user.posts?.length]);
 
   useEffect(() => {
     if (!selectedPostId) return;
@@ -98,6 +104,7 @@ const PostModalProvider = ({ children }) => {
         await dispatch(fetchPostsById(selectedPostId));
       } else {
         await dispatch(fetchPosts());
+        await dispatch(getUserWithPosts(user.id));
       }
     } catch (error) {
       console.error("Ошибка обработки лайка:", error);
@@ -150,6 +157,7 @@ const PostModalProvider = ({ children }) => {
         closeModal,
         isDescriptionExpanded,
         handleDescriptionToggle,
+        postsCount,
       }}
     >
       {children}
