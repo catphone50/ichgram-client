@@ -32,16 +32,18 @@ const PostDialog = ({ onClose, postId, onDelete, userId, author }) => {
     if (isMyPost) {
       try {
         await navigator.clipboard.writeText(
-          `${window.location.origin}profile/${userId}/post/${postId}`
+          `${window.location.origin}/profile/${userId}/post/${postId}`
         );
+        onClose();
       } catch (error) {
         console.error("Error copying link:", error);
       }
     } else {
       try {
         await navigator.clipboard.writeText(
-          `${window.location.origin}home/post/${postId}`
+          `${window.location.origin}/home/post/${postId}`
         );
+        onClose();
       } catch (error) {
         console.error("Error copying link:", error);
       }

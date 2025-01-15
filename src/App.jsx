@@ -18,8 +18,9 @@ import EditProfilePage from "./pages/EditProfilePage/EditProfilePage.jsx";
 import SideNav from "./components/SideNav/SideNav.jsx";
 import { isAuthenticated } from "./services/isAuthenticated.js";
 //import store from "./store/store.js";
-import PostModal from "./components/PostModal/PostModal.jsx";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage/index.jsx";
+import { PostModalProvider } from "./components/PostModalContext/index.jsx";
+import PostModal from "./components/PostModal/PostModal.jsx";
 
 const ProtectedRoute = ({ element }) => {
   return isAuthenticated() ? element : <Navigate to="/login" />;
@@ -47,7 +48,11 @@ function App() {
                   <Routes>
                     <Route
                       path="/home"
-                      element={<ProtectedRoute element={<MainPage />} />}
+                      element={
+                        <PostModalProvider>
+                          <ProtectedRoute element={<MainPage />} />{" "}
+                        </PostModalProvider>
+                      }
                     >
                       <Route
                         path="post/:postId"
@@ -105,3 +110,6 @@ function App() {
 }
 
 export default App;
+
+//http://localhost:5173/home/post/6782c491a4dc3a59c6f9baee
+//http://localhost:5173home/post/6785567c62c07989b8bf29a0

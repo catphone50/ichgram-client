@@ -17,13 +17,16 @@ export const fetchPosts = createAsyncThunk(
 export const fetchPostsById = createAsyncThunk(
   "posts/fetchPostsById",
   async (postId, { rejectWithValue }) => {
+    //  console.log("Fetching post with ID:", postId);
     try {
       const response = await axios.get(
         `http://localhost:3000/api/posts/${postId}`
       );
+      //  console.log("Response data:", response.data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      console.error("Error fetching post:", error);
+      return rejectWithValue(error.response?.data || "Unknown error");
     }
   }
 );

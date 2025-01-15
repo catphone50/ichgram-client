@@ -3,6 +3,7 @@ import EditProfile from "../../components/EditProfile/EditProfile";
 import { useEffect } from "react";
 import { getUserInfo } from "../../store/features/users/userActions";
 import { useDispatch, useSelector } from "react-redux";
+import Footer from "../../components/Footer";
 
 const EditProfilePage = () => {
   const dispatch = useDispatch();
@@ -20,9 +21,12 @@ const EditProfilePage = () => {
   if (error) return <p>Ошибка: {error}</p>;
 
   return (
-    <div className={styles.container}>
-      <EditProfile profile={user} />
-    </div>
+    <>
+      <div className={styles.container}>
+        <EditProfile profile={user} />
+      </div>
+      <Footer />
+    </>
   );
 };
 

@@ -9,12 +9,15 @@ import {
   likeComment,
   unlikeComment,
 } from "../../store/features/likes/likeActions";
-import { findUserById } from "../../services/count";
 
 const Comment = ({ comment, userId }) => {
   const dispatch = useDispatch();
   const [isMyLike, setIsMyLike] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
+
+  const findUserById = (array, userId) => {
+    return array?.some((item) => item.user?._id === userId);
+  };
 
   const likes = useSelector((state) => state.likes.commentLikes);
 

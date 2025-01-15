@@ -4,11 +4,13 @@ import {
   createPost,
   deletePost,
   fetchUserPosts,
+  fetchPostsById,
 } from "./postActions";
 
 const initialState = {
   posts: [],
   userPosts: [],
+  post: null,
   isLoading: false,
   error: null,
 };
@@ -72,13 +74,28 @@ const postSlice = createSlice({
         state.error = null;
       })
       .addCase(deletePost.fulfilled, (state, action) => {
-        console.log(action.payload);
+        //  console.log(action.payload);
         state.userPosts = state.userPosts.filter(
           (post) => post._id !== action.payload
         );
         state.isLoading = false;
       })
       .addCase(deletePost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+
+      // Fetch posts by ID
+      .addCase(fetchPostsById.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchPostsById.fulfilled, (state, action) => {
+        //   console.log("Fetched post data in reducer:", action.payload);
+        state.post = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(fetchPostsById.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       });

@@ -47,8 +47,6 @@ const Profile = () => {
     }
   }, [dispatch, userPosts.length]);
 
-  console.log(postsError);
-
   useEffect(() => {
     if (userPosts) {
       setPosts(userPosts);
@@ -83,7 +81,7 @@ const Profile = () => {
   if (userLoading) return <p>Loading...</p>;
 
   // Обработать ошибки
-  if (userError) return <p>Error: {userError.message}</p>;
+  if (userError || postsError) return <p>Error: {userError.message}</p>;
 
   return (
     <>
@@ -168,9 +166,7 @@ const Profile = () => {
 
       <div className={styles.photoGallery}>
         {posts.length > 0 ? (
-          posts.map((post) => (
-            <Post key={post._id} post={post} goTo={`/profile/${profile.id}`} />
-          ))
+          posts.map((post) => <Post key={post._id} post={post} />)
         ) : (
           <p>No photos</p>
         )}

@@ -22,7 +22,13 @@ export const selectUserPosts = createSelector(
   (postState) => postState.userPosts
 );
 
-export const selectPostById = (postId) =>
-  createSelector([selectAllPosts], (posts) =>
-    posts.find((post) => post.id === postId)
-  );
+export const selectPostById = createSelector(
+  [selectPostState],
+  (postState) => postState.post
+);
+// export const selectPostById = (postId) =>
+//   createSelector(
+//     [selectPostState],
+//     (postState) =>
+//     postState.post._id === postId ? postState.post : undefined
+//   );

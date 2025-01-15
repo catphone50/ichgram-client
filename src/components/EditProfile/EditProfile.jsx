@@ -13,6 +13,8 @@ import { updateUserInfo } from "../../store/features/users/userActions";
 import { fileToBase64 } from "../../services/converterToBasw64";
 
 const EditProfile = ({ profile }) => {
+  const [errorMessage, setErrorMessage] = useState(null);
+
   const [avatarBase64, setAvatarBase64] = useState(profile.avatar || avatar);
 
   const {
@@ -36,10 +38,19 @@ const EditProfile = ({ profile }) => {
   const onSubmit = async (data) => {
     data.avatar = avatarBase64;
     try {
-      await dispatch(updateUserInfo(data));
-      navigate(`/profile/${profile.id}`);
+      const resultAction = await dispatch(updateUserInfo(data));
+
+      if (updateUserInfo.fulfilled.match(resultAction)) {
+        navigate(`/profile/${profile.id}`);
+      } else {
+        console.error(
+          "Updating profile failed:",
+          setErrorMessage(resultAction.payload || resultAction.error)
+        );
+      }
     } catch (error) {
       console.error("Updating profile failed:", error);
+      setErrorMessage(error);
     }
   };
 
@@ -58,6 +69,7 @@ const EditProfile = ({ profile }) => {
         },
         error(err) {
           console.error(err.message);
+          setErrorMessage(err);
         },
       });
     }
@@ -137,6 +149,11 @@ const EditProfile = ({ profile }) => {
       />
       {errors.username && (
         <span className={styles.error}>{errors.username.message}</span>
+      )}
+      {errorMessage && (
+        <span className={styles.error}>
+          {"Username or email already exists"}
+        </span>
       )}
 
       <label htmlFor="socialLinks">Website</label>

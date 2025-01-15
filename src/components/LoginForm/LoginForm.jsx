@@ -27,7 +27,6 @@ const LoginForm = () => {
   const onSubmit = async (data) => {
     try {
       const resultAction = await dispatch(loginUser(data));
-      console.log(data);
 
       if (loginUser.fulfilled.match(resultAction)) {
         console.log("Login successful");
