@@ -4,7 +4,7 @@ import styles from "./SignUpPage.module.css";
 
 const SignUpPage = () => {
   return (
-    <>
+    <div className={styles.container}>
       <div className={styles.formContainer}>
         <img src={logo} alt="Logo" className={styles.logo} />
         <p className={styles.aboutUs}>
@@ -19,7 +19,7 @@ const SignUpPage = () => {
           </p>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

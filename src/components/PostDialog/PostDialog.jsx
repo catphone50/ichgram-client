@@ -4,7 +4,7 @@ import { deletePost } from "../../store/features/posts/postActions";
 import ConfirmDialog from "../ConfirmDialog";
 import { useState } from "react";
 import { checkUserId } from "../../services/isAuthenticated";
-const PostDialog = ({ onClose, postId, onDelete, userId, author }) => {
+const PostDialog = ({ onClose, postId, onDelete, author }) => {
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const isMyPost = checkUserId(author);
 
@@ -32,7 +32,7 @@ const PostDialog = ({ onClose, postId, onDelete, userId, author }) => {
     if (isMyPost) {
       try {
         await navigator.clipboard.writeText(
-          `${window.location.origin}/profile/${userId}/post/${postId}`
+          `${window.location.origin}/profile/${author}/post/${postId}`
         );
         onClose();
       } catch (error) {

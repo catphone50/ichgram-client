@@ -7,7 +7,12 @@ import {
   fetchPostsById,
 } from "../../store/features/posts/postActions";
 import { useNavigate, useParams } from "react-router-dom";
-import { getUserWithPosts } from "../../store/features/users/userActions";
+import { getUserWithPosts } from "../../store/features/profile/profileActions";
+import {
+  fetchFollowing,
+  followUser,
+  unfollowUser,
+} from "../../store/features/follow/followActions";
 
 const PostModalContext = createContext();
 
@@ -18,17 +23,22 @@ const PostModalProvider = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDescriptionExpanded, setDescriptionExpanded] = useState(false);
   const [postsCount, setPostsCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+  const [followersCount, setFollowersCount] = useState(0);
+  const [isUserAlreadyFollowed, setIsUserAlreadyFollowed] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { postParamsId } = useParams();
   const postRef = useRef(null);
+  const id = useParams().id;
 
   const user = useSelector((state) => state.user.user);
   const post = useSelector((state) => state.posts.post);
+  const profile = useSelector((state) => state.profile.user);
 
-  //console.log(user);
-  // console.log(postOld);
+  //console.log("profile", profile);
+  post && console.log("post", post);
 
   useEffect(() => {
     if (postParamsId) {
@@ -36,12 +46,19 @@ const PostModalProvider = ({ children }) => {
     }
     if (post) {
       setSelectedPostId(post._id);
+      checkIfUserIsFollowed(post.author._id);
     }
-  }, []);
+  }, [postParamsId, post]);
 
   useEffect(() => {
-    setPostsCount(user.posts?.length);
-  }, [user.posts?.length]);
+    setPostsCount(profile.posts?.length);
+    setFollowingCount(profile.following?.length);
+    setFollowersCount(profile.followers?.length);
+  }, [
+    profile.posts?.length,
+    profile.following?.length,
+    profile.followers?.length,
+  ]);
 
   useEffect(() => {
     if (!selectedPostId) return;
@@ -62,6 +79,21 @@ const PostModalProvider = ({ children }) => {
 
     fetchPostData();
   }, [selectedPostId, dispatch]);
+
+  const checkIfUserIsFollowed = async (targetUserId) => {
+    try {
+      const response = await dispatch(fetchFollowing(user.id));
+      const followingList = response.payload;
+
+      const isFollowed = followingList.some((following) => {
+        return following.following._id === targetUserId;
+      });
+
+      setIsUserAlreadyFollowed(isFollowed);
+    } catch (error) {
+      console.error("Error checking if user is followed:", error);
+    }
+  };
 
   const handlePost = async () => {
     if (!commentText.trim()) return;
@@ -104,11 +136,38 @@ const PostModalProvider = ({ children }) => {
         await dispatch(fetchPostsById(selectedPostId));
       } else {
         await dispatch(fetchPosts());
-        await dispatch(getUserWithPosts(user.id));
+        await dispatch(getUserWithPosts(id));
       }
     } catch (error) {
       console.error("Ошибка обработки лайка:", error);
     }
+  };
+
+  const toggleFollow = async (followingId) => {
+    if (!followingId) return;
+
+    const data = { followerId: user.id, followingId: followingId };
+
+    try {
+      if (isUserAlreadyFollowed) {
+        await dispatch(unfollowUser(data));
+      } else {
+        await dispatch(followUser(data));
+      }
+      checkIfUserIsFollowed(followingId);
+      if (isModalOpen) {
+        await dispatch(fetchPostsById(selectedPostId));
+      } else {
+        await dispatch(fetchPosts());
+        await dispatch(getUserWithPosts(id));
+      }
+    } catch (error) {
+      console.error("Ошибка обработки follow:", error);
+    }
+  };
+
+  const handleFollow = (followingId) => {
+    toggleFollow(followingId);
   };
 
   const handleLike = (post) => {
@@ -119,8 +178,9 @@ const PostModalProvider = ({ children }) => {
     setIsDialogOpen(true);
   };
 
-  const closeDialog = () => {
+  const closeDialog = async () => {
     setIsDialogOpen(false);
+    await dispatch(fetchPosts());
   };
 
   const handlePostSelect = (post) => {
@@ -158,6 +218,12 @@ const PostModalProvider = ({ children }) => {
         isDescriptionExpanded,
         handleDescriptionToggle,
         postsCount,
+        handleFollow,
+        followersCount,
+        followingCount,
+        isUserAlreadyFollowed,
+        setIsUserAlreadyFollowed,
+        checkIfUserIsFollowed,
       }}
     >
       {children}

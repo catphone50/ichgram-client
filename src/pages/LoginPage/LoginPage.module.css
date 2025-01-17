@@ -4,6 +4,9 @@
   max-width: 1000px;
   background-color: white;
   column-gap: 30px;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
 .left {

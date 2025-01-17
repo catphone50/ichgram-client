@@ -9,12 +9,15 @@ import { PostModalContext } from "../PostModalContext";
 import PostModal from "../PostModal/PostModal";
 
 const Profile = ({ profile }) => {
-  const { isModalOpen, closeModal, postsCount } = useContext(PostModalContext);
+  const {
+    isModalOpen,
+    closeModal,
+    postsCount,
+    followersCount,
+    followingCount,
+  } = useContext(PostModalContext);
 
   const [isDescriptionExpanded, setDescriptionExpanded] = useState(false);
-
-  const followersCount = 0;
-  const followingCount = 0;
 
   const navigate = useNavigate();
   const dispatch = useDispatch();

@@ -14,6 +14,35 @@ export const fetchPosts = createAsyncThunk(
   }
 );
 
+export const fetchPostsByLimit = createAsyncThunk(
+  "posts/fetchPostsByLimit",
+  async (limit, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/posts/limit/${limit}`
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const fetchPostsByLikesAndLimit = createAsyncThunk(
+  "posts/fetchPostsByLikesAndRange",
+  async ({ start, end }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/posts/posts/likes/${start}/${end}`
+      );
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const fetchPostsById = createAsyncThunk(
   "posts/fetchPostsById",
   async (postId, { rejectWithValue }) => {

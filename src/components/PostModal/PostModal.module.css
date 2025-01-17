@@ -14,7 +14,7 @@
 .modalContent {
   display: flex;
   background: #fff;
-  border-radius: 10px;
+
   overflow: hidden;
   max-width: 1000px;
   width: 100%;

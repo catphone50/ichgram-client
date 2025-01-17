@@ -1,10 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  loginUser,
-  registerUser,
-  getUserInfo,
-  getUserWithPosts,
-} from "./userActions";
+import { loginUser, registerUser, getUserInfo } from "./userActions";
 
 const initialState = {
   user: {
@@ -113,23 +108,6 @@ const userSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(getUserInfo.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
-
-      .addCase(getUserWithPosts.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(getUserWithPosts.fulfilled, (state, action) => {
-        state.user.email = action.payload.email;
-        state.user.fullName = action.payload.fullName;
-        state.user.description = action.payload.description;
-        state.user.createdAt = action.payload.createdAt;
-        state.user.posts = action.payload.posts;
-        state.isLoading = false;
-      })
-      .addCase(getUserWithPosts.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       });

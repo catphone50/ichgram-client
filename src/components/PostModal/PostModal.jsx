@@ -116,7 +116,7 @@ const PostModal = ({ onClose }) => {
           onClose={closeDialog}
           onDelete={onClose}
           postId={post._id}
-          userId={post.author._id}
+          author={post.author._id}
         />
       )}
     </div>

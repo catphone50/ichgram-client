@@ -1,0 +1,16 @@
+.container {
+  max-width: 400px;
+  display: flex;
+  background-color: #fff;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  row-gap: 12px;
+  padding-top: 26px;
+  padding-bottom: 56px;
+}
+
+.update {
+  width: 82px;
+  height: 82px;
+}

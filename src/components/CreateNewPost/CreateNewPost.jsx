@@ -3,9 +3,9 @@ import styles from "./CreateNewPost.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import avatar from "../../assets/icons/benutzer.svg";
 import { fileToBase64 } from "../../services/converterToBasw64";
-import { createPost } from "../../store/features/posts/postActions";
+import { createPost, fetchPosts } from "../../store/features/posts/postActions";
 import imageCompression from "browser-image-compression";
-import { getUserWithPosts } from "../../store/features/users/userActions";
+import { getUserWithPosts } from "../../store/features/profile/profileActions";
 
 const CreateNewPost = ({ showModal, closeModal }) => {
   console.log("CreateNewPost component rendered");
@@ -67,6 +67,7 @@ const CreateNewPost = ({ showModal, closeModal }) => {
     try {
       await dispatch(createPost(postData));
       await dispatch(getUserWithPosts(user.id));
+      await dispatch(fetchPosts());
       handelCloseModal();
     } catch (error) {
       console.error("Updating profile failed:", error);

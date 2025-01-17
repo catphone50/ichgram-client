@@ -8,7 +8,6 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import SearchPage from "./pages/SearchPage/SearchPage";
 import ExplorePage from "./pages/Explore/ExplorePage";
 import MessagesPage from "./pages/Messages/MessagesPage";
 import NotificationsPage from "./pages/Notifications/NotificationsPage";
@@ -60,13 +59,19 @@ function App() {
                       />
                     </Route>
                     <Route
-                      path="/search"
-                      element={<ProtectedRoute element={<SearchPage />} />}
-                    />
-                    <Route
                       path="/explore"
-                      element={<ProtectedRoute element={<ExplorePage />} />}
-                    />
+                      element={
+                        <PostModalProvider>
+                          <ProtectedRoute element={<ExplorePage />} />
+                        </PostModalProvider>
+                      }
+                    >
+                      {" "}
+                      <Route
+                        path="post/:postId"
+                        element={<ProtectedRoute element={<PostModal />} />}
+                      />
+                    </Route>
                     <Route
                       path="/messages"
                       element={<ProtectedRoute element={<MessagesPage />} />}

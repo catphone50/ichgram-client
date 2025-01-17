@@ -6,6 +6,7 @@ import Post from "../../components/Post/Post";
 import Footer from "../../components/Footer";
 import { PostModalContext } from "../../components/PostModalContext";
 import PostModal from "../../components/PostModal/PostModal";
+import AllUpdates from "../../components/AllUpdates";
 
 const MainPage = () => {
   const { isModalOpen, closeModal } = useContext(PostModalContext);
@@ -33,6 +34,7 @@ const MainPage = () => {
           <p>No photos</p>
         )}
       </div>
+      <AllUpdates />
       <Footer />
       {isModalOpen && <PostModal onClose={closeModal} />}
     </>

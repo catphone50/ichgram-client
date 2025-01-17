@@ -5,6 +5,8 @@ import {
   deletePost,
   fetchUserPosts,
   fetchPostsById,
+  fetchPostsByLimit,
+  fetchPostsByLikesAndLimit,
 } from "./postActions";
 
 const initialState = {
@@ -96,6 +98,35 @@ const postSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(fetchPostsById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+
+      // Fetch posts by limit
+      .addCase(fetchPostsByLimit.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchPostsByLimit.fulfilled, (state, action) => {
+        //   console.log("Fetched post data in reducer:", action.payload);
+        state.posts = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(fetchPostsByLimit.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+
+      // Fetch posts by likes
+      .addCase(fetchPostsByLikesAndLimit.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchPostsByLikesAndLimit.fulfilled, (state, action) => {
+        state.posts = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(fetchPostsByLikesAndLimit.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       });
