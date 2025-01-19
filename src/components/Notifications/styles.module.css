@@ -1,0 +1,72 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 250px;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+  border: 1px solid #a6a0a0;
+  padding: 2px;
+}
+
+.error {
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 280px;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 22px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  padding-left: 10px;
+}
+
+.text {
+  font-size: 16px;
+  margin-bottom: 10px;
+  padding-left: 10px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    left: 200px;
+  }
+  .modalBackdrop {
+    left: 200px;
+  }
+}
+@media (max-width: 480px) {
+  .container {
+    left: 180px;
+  }
+  .modalBackdrop {
+    left: 180px;
+  }
+}

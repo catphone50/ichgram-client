@@ -10,7 +10,6 @@ import {
 } from "react-router-dom";
 import ExplorePage from "./pages/Explore/ExplorePage";
 import MessagesPage from "./pages/Messages/MessagesPage";
-import NotificationsPage from "./pages/Notifications/NotificationsPage";
 import CreatePage from "./pages/Create/CreatePage";
 import ProfilePage from "./pages/Profile/ProfilePage";
 import EditProfilePage from "./pages/EditProfilePage/EditProfilePage.jsx";
@@ -76,12 +75,7 @@ function App() {
                       path="/messages"
                       element={<ProtectedRoute element={<MessagesPage />} />}
                     />
-                    <Route
-                      path="/notifications"
-                      element={
-                        <ProtectedRoute element={<NotificationsPage />} />
-                      }
-                    />
+
                     <Route
                       path="/create"
                       element={<ProtectedRoute element={<CreatePage />} />}

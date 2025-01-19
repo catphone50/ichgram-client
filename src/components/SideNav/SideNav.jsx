@@ -18,6 +18,7 @@ import CreateNewPost from "../CreateNewPost/CreateNewPost";
 import { useState } from "react";
 import menuIcon from "../../assets/icons/menu.svg";
 import Search from "../Search/Search";
+import Notifications from "../Notifications/Notifications";
 
 const SideNav = () => {
   const location = useLocation();
@@ -26,6 +27,7 @@ const SideNav = () => {
   const [showModal, setShowModal] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   if (isLoading) {
     return <div>Загрузка...</div>;
@@ -54,6 +56,10 @@ const SideNav = () => {
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const toggleNotifications = () => {
+    setShowNotifications(!showNotifications);
   };
 
   const userProfile = user ? user : null;
@@ -86,7 +92,18 @@ const SideNav = () => {
     },
     {
       name: "Notifications",
-      path: "/notifications",
+      component: (
+        <button onClick={toggleNotifications} className={styles.navigationLink}>
+          <img
+            width={20}
+            height={20}
+            src={`${showNotifications ? acNotification : notification}`}
+            alt="Notifications Icon"
+            className={styles.icon}
+          />
+          Notifications
+        </button>
+      ),
       icon: notification,
       activeIcon: acNotification,
     },
@@ -156,6 +173,7 @@ const SideNav = () => {
             )
           )}
         </ul>
+        {showNotifications && <Notifications />}
         {showSearch && <Search closeSearch={toggleSearch} />}
         {showModal && (
           <CreateNewPost showModal={showModal} closeModal={closeModal} />
