@@ -38,7 +38,7 @@ const PostModalProvider = ({ children }) => {
   const profile = useSelector((state) => state.profile.user);
 
   //console.log("profile", profile);
-  post && console.log("post", post);
+  //post && console.log("post", post);
 
   useEffect(() => {
     if (postParamsId) {

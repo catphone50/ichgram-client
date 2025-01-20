@@ -173,7 +173,9 @@ const SideNav = () => {
             )
           )}
         </ul>
-        {showNotifications && <Notifications />}
+        {showNotifications && (
+          <Notifications closeNotifications={toggleNotifications} />
+        )}
         {showSearch && <Search closeSearch={toggleSearch} />}
         {showModal && (
           <CreateNewPost showModal={showModal} closeModal={closeModal} />

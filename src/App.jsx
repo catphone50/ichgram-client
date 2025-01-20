@@ -65,7 +65,6 @@ function App() {
                         </PostModalProvider>
                       }
                     >
-                      {" "}
                       <Route
                         path="post/:postId"
                         element={<ProtectedRoute element={<PostModal />} />}

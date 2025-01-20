@@ -5,14 +5,20 @@ import axios from "axios";
 export const likePost = createAsyncThunk(
   "likes/likePost",
   async ({ userId, postId }, { rejectWithValue }) => {
+    const user = localStorage.getItem("user");
+    const username = JSON.parse(user).username;
     try {
       const response = await axios.post(
         "http://localhost:3000/api/likes/like",
         {
           userId,
           postId,
+          username,
+          type: "liked post",
         }
       );
+
+      console.log("Response data:", response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -24,12 +30,16 @@ export const likePost = createAsyncThunk(
 export const unlikePost = createAsyncThunk(
   "likes/unlikePost",
   async ({ userId, postId }, { rejectWithValue }) => {
+    const user = localStorage.getItem("user");
+    const username = JSON.parse(user).username;
     try {
       const response = await axios.post(
         "http://localhost:3000/api/likes/unlike",
         {
           userId,
           postId,
+          username,
+          type: "liked post",
         }
       );
       return response.data;
