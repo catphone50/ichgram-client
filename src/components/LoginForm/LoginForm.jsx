@@ -29,8 +29,8 @@ const LoginForm = () => {
       const resultAction = await dispatch(loginUser(data));
 
       if (loginUser.fulfilled.match(resultAction)) {
-        console.log("Login successful");
         navigate("/home");
+        console.log("Login successful");
       } else {
         console.error(
           "Login failed:",

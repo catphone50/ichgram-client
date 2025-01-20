@@ -28,7 +28,7 @@ const Post = ({ post }) => {
 
   useEffect(() => {
     checkIfUserIsFollowed(post.author._id);
-  }, [checkIfUserIsFollowed, post.author._id]);
+  }, [post.author._id]);
 
   return (
     <>

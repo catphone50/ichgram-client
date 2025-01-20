@@ -81,15 +81,20 @@ const PostModalProvider = ({ children }) => {
   }, [selectedPostId, dispatch]);
 
   const checkIfUserIsFollowed = async (targetUserId) => {
+    if (!targetUserId) return;
+    if (targetUserId === user.id) return;
     try {
       const response = await dispatch(fetchFollowing(user.id));
+      if (!response.payload) {
+        console.error("Invalid response or payload from fetchFollowing");
+      }
       const followingList = response.payload;
 
-      const isFollowed = followingList.some((following) => {
-        return following.following._id === targetUserId;
+      const isFollowed = followingList?.some((following) => {
+        return following?.following?._id === targetUserId;
       });
 
-      setIsUserAlreadyFollowed(isFollowed);
+      setIsUserAlreadyFollowed(Boolean(isFollowed));
     } catch (error) {
       console.error("Error checking if user is followed:", error);
     }

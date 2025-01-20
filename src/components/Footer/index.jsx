@@ -1,29 +1,52 @@
+import { useState } from "react";
 import styles from "./styles.module.css";
 import { Link } from "react-router-dom";
+import CreateNewPost from "../CreateNewPost/CreateNewPost";
+import Notifications from "../Notifications/Notifications";
+import Search from "../Search/Search";
 
 function Footer() {
+  const [showModal, setShowModal] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const toggleModal = () => setShowModal(!showModal);
+
+  const toggleSearch = () => {
+    setShowSearch(!showSearch);
+  };
+
+  const toggleNotifications = () => {
+    setShowNotifications(!showNotifications);
+  };
   return (
     <div className={styles.footerContainer}>
       <div className={styles.linkConatiner}>
         <Link to={"/home"} className={styles.link}>
           Home
         </Link>
-        <Link to={"/search"} className={styles.link}>
+        <button onClick={toggleSearch} className={styles.link}>
           Search
-        </Link>
+        </button>
         <Link to={"/explore"} className={styles.link}>
           Explore
         </Link>
         <Link to={"/messages"} className={styles.link}>
           Messages
         </Link>
-        <Link to={"/notifications"} className={styles.link}>
+        <button onClick={toggleNotifications} className={styles.link}>
           Notificaitons
-        </Link>
-        <Link to={"/create"} className={styles.link}>
+        </button>
+        <button onClick={toggleModal} className={styles.link}>
           Create
-        </Link>
+        </button>
       </div>
+      {showNotifications && (
+        <Notifications closeNotifications={toggleNotifications} />
+      )}
+      {showSearch && <Search closeSearch={toggleSearch} />}
+      {showModal && (
+        <CreateNewPost showModal={showModal} closeModal={toggleModal} />
+      )}
       <div className={styles.copyrightContainer}>© 2024 ICHgram</div>
     </div>
   );
