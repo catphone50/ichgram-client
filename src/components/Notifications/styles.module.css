@@ -12,6 +12,18 @@
   left: 250px;
 }
 
+.notificationList {
+  padding: 10px;
+}
+
+.notificationItem {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
 .avatar {
   width: 30px;
   height: 30px;
@@ -46,6 +58,11 @@
   margin-top: 10px;
   margin-bottom: 20px;
   padding-left: 10px;
+}
+
+.notificationDate {
+  padding-left: 10px;
+  color: #8b8b8b;
 }
 
 .text {

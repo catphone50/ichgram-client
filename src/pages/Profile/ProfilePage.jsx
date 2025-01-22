@@ -15,12 +15,6 @@ const ProfilePage = () => {
     dispatch(getUserWithPosts(profileId.id));
   }, [profileId]);
 
-  console.log(
-    user?.following?.some(
-      (following) => following._id === "678523a4dbfe8cc70d7c20ba"
-    )
-  );
-
   // Показать индикатор загрузки, если данные еще не загружены
   if (isLoading) return <p>Loading...</p>;
 

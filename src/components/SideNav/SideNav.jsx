@@ -15,10 +15,20 @@ import acNotification from "../../assets/icons/notifications-active.svg";
 import create from "../../assets/icons/create.svg";
 import profile from "../../assets/icons/benutzer.svg";
 import CreateNewPost from "../CreateNewPost/CreateNewPost";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import menuIcon from "../../assets/icons/menu.svg";
 import Search from "../Search/Search";
 import Notifications from "../Notifications/Notifications";
+import Badge from "../Badge/index";
+import io from "socket.io-client";
+
+const socket = io("http://localhost:3000", {
+  transports: ["websocket"],
+  withCredentials: true,
+  query: {
+    token: localStorage.getItem("token"), // Передаем токен как параметр запроса
+  },
+});
 
 const SideNav = () => {
   const location = useLocation();
@@ -28,6 +38,36 @@ const SideNav = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(0);
+
+  useEffect(() => {
+    socket.emit("joinNotifications");
+    socket.on("initialNotifications", (notifications) => {
+      const unreadNotifications = notifications.filter(
+        (notification) => !notification.read
+      );
+      setNotificationCount(unreadNotifications.length);
+    });
+
+    socket.on("receiveNotification", (newNotification) => {
+      setNotificationCount(
+        (prevCount) => newNotification.read === false && prevCount + 1
+      );
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("Ошибка подключения:", error);
+    });
+
+    return () => {
+      console.log("Отключение от сервера уведомлений...");
+      socket.off("connect");
+      socket.off("initialNotifications");
+      socket.off("receiveNotification");
+      socket.off("deleteNotification");
+      socket.off("connect_error");
+    };
+  }, []);
 
   if (isLoading) {
     return <div>Загрузка...</div>;
@@ -52,6 +92,8 @@ const SideNav = () => {
 
   const toggleSearch = () => {
     setShowSearch(!showSearch);
+    setShowModal(false);
+    setShowNotifications(false);
   };
 
   const toggleSidebar = () => {
@@ -60,76 +102,13 @@ const SideNav = () => {
 
   const toggleNotifications = () => {
     setShowNotifications(!showNotifications);
+    setShowModal(false);
+    setShowSearch(false);
+    setNotificationCount(0);
+    socket.emit("markAsRead");
   };
 
   const userProfile = user ? user : null;
-
-  const navItems = [
-    { name: "Home", path: "/home", icon: home, activeIcon: acHome },
-    {
-      name: "Search",
-      component: (
-        <button onClick={toggleSearch} className={styles.navigationLink}>
-          <img
-            width={20}
-            height={20}
-            src={`${showSearch ? acSearch : search}`}
-            alt="Search Icon"
-            className={styles.icon}
-          />
-          Search
-        </button>
-      ),
-      icon: search,
-      activeIcon: acSearch,
-    },
-    { name: "Explore", path: "/explore", icon: explore, activeIcon: acExplore },
-    {
-      name: "Messages",
-      path: "/messages",
-      icon: message,
-      activeIcon: acMessage,
-    },
-    {
-      name: "Notifications",
-      component: (
-        <button onClick={toggleNotifications} className={styles.navigationLink}>
-          <img
-            width={20}
-            height={20}
-            src={`${showNotifications ? acNotification : notification}`}
-            alt="Notifications Icon"
-            className={styles.icon}
-          />
-          Notifications
-        </button>
-      ),
-      icon: notification,
-      activeIcon: acNotification,
-    },
-
-    {
-      name: "Create",
-      component: (
-        <button onClick={openModal} className={styles.navigationLink}>
-          <img
-            width={20}
-            height={20}
-            src={create}
-            alt="Create Icon"
-            className={styles.icon}
-          />
-          Create
-        </button>
-      ),
-    },
-    {
-      name: "Profile",
-      path: `/profile/${userProfile?.id}`,
-      icon: userProfile?.avatar || profile,
-      activeIcon: userProfile?.avatar || profile,
-    },
-  ];
 
   return (
     <>
@@ -143,35 +122,115 @@ const SideNav = () => {
           <img src={logo} alt="Logo" className={styles.logo} />
         </Link>
         <ul className={styles.navigationList}>
-          {navItems.map((item) =>
-            item.path ? (
-              <li
-                key={item.name}
-                className={`${styles.navigationItem} ${
-                  location.pathname === item.path ? styles.active : ""
-                }`}
-              >
-                <Link to={item.path} className={styles.navigationLink}>
-                  <img
-                    width={20}
-                    height={20}
-                    src={
-                      location.pathname === item.path
-                        ? item.activeIcon
-                        : item.icon
-                    }
-                    alt={`${item.name} Icon`}
-                    className={styles.icon}
-                  />
-                  {item.name}
-                </Link>
-              </li>
-            ) : (
-              <li key={item.name} className={styles.navigationItem}>
-                {item.component}
-              </li>
-            )
-          )}
+          <li
+            className={`${styles.navigationItem} ${
+              location.pathname === "/home" ? styles.active : ""
+            }`}
+          >
+            <Link to="/home" className={styles.navigationLink}>
+              <img
+                width={20}
+                height={20}
+                src={location.pathname === "/home" ? acHome : home}
+                alt="Home Icon"
+                className={styles.icon}
+              />
+              Home
+            </Link>
+          </li>
+          <li className={styles.navigationItem}>
+            <button onClick={toggleSearch} className={styles.navigationLink}>
+              <img
+                width={20}
+                height={20}
+                src={showSearch ? acSearch : search}
+                alt="Search Icon"
+                className={styles.icon}
+              />
+              Search
+            </button>
+          </li>
+          <li
+            className={`${styles.navigationItem} ${
+              location.pathname === "/explore" ? styles.active : ""
+            }`}
+          >
+            <Link to="/explore" className={styles.navigationLink}>
+              <img
+                width={20}
+                height={20}
+                src={location.pathname === "/explore" ? acExplore : explore}
+                alt="Explore Icon"
+                className={styles.icon}
+              />
+              Explore
+            </Link>
+          </li>
+          <li
+            className={`${styles.navigationItem} ${
+              location.pathname === "/messages" ? styles.active : ""
+            }`}
+          >
+            <Link to="/messages" className={styles.navigationLink}>
+              <img
+                width={20}
+                height={20}
+                src={location.pathname === "/messages" ? acMessage : message}
+                alt="Messages Icon"
+                className={styles.icon}
+              />
+              Messages
+            </Link>
+          </li>
+          <li className={styles.navigationItem}>
+            <button
+              onClick={toggleNotifications}
+              className={styles.navigationLink}
+            >
+              <img
+                width={20}
+                height={20}
+                src={showNotifications ? acNotification : notification}
+                alt="Notifications Icon"
+                className={styles.icon}
+              />
+              Notifications
+            </button>
+            <Badge text={notificationCount} />
+          </li>
+          <li className={styles.navigationItem}>
+            <button onClick={openModal} className={styles.navigationLink}>
+              <img
+                width={20}
+                height={20}
+                src={create}
+                alt="Create Icon"
+                className={styles.icon}
+              />
+              Create
+            </button>
+          </li>
+          <li
+            className={`${styles.navigationItem} ${
+              location.pathname === `/profile/${userProfile?.id}`
+                ? styles.active
+                : ""
+            }`}
+          >
+            <Link
+              to={`/profile/${userProfile?.id}`}
+              className={styles.navigationLink}
+            >
+              <img
+                width={20}
+                height={20}
+                src={userProfile?.avatar || profile}
+                alt="Profile Icon"
+                className={styles.icon}
+              />
+              Profile
+            </Link>
+          </li>
         </ul>
         {showNotifications && (
           <Notifications closeNotifications={toggleNotifications} />

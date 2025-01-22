@@ -23,7 +23,7 @@ const Profile = ({ profile }) => {
   const dispatch = useDispatch();
 
   const isMyProfile =
-    profile.id === JSON.parse(localStorage.getItem("user")).id;
+    profile?.id === JSON.parse(localStorage.getItem("user")).id;
 
   const handleDescriptionToggle = () => {
     setDescriptionExpanded(!isDescriptionExpanded);

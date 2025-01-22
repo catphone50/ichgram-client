@@ -1,38 +1,24 @@
 import { useEffect, useState } from "react";
 import styles from "./styles.module.css";
 import io from "socket.io-client";
+import avatar from "../../assets/icons/benutzer.svg";
+import { formatDate } from "../../services/formatData";
 
 const socket = io("http://localhost:3000", {
   transports: ["websocket"],
   withCredentials: true,
+  query: {
+    token: localStorage.getItem("token"), // Передаем токен как параметр запроса
+  },
 });
 
 const Notifications = ({ closeNotifications }) => {
   const [notificationList, setNotificationList] = useState([]);
 
   useEffect(() => {
-    console.log("Подключение к серверу уведомлений...");
-
-    socket.on("connect", () => {
-      console.log("Клиент успешно подключен:", socket.id);
-      socket.emit("joinNotifications");
-    });
-
+    socket.emit("joinNotifications");
     socket.on("initialNotifications", (notifications) => {
-      console.log("Получены начальные уведомления:", notifications);
       setNotificationList(notifications);
-    });
-
-    socket.on("receiveNotification", (data) => {
-      console.log("Получено уведомление:", data);
-      setNotificationList((prevList) => [...prevList, data]);
-    });
-
-    socket.on("deleteNotification", (data) => {
-      console.log("Удалено уведомление:", data);
-      setNotificationList((prevList) =>
-        prevList.filter((notif) => notif.message !== data.message)
-      );
     });
 
     socket.on("connect_error", (error) => {
@@ -57,11 +43,16 @@ const Notifications = ({ closeNotifications }) => {
         <div className={styles.notificationList}>
           {notificationList.map((notification, index) => (
             <div key={index} className={styles.notificationItem}>
+              <img
+                src={notification.sender.avatar || avatar}
+                alt="Notification"
+                className={styles.avatar}
+              />
               <p className={styles.notificationMessage}>
                 {notification.message}
               </p>
               <p className={styles.notificationDate}>
-                {new Date(notification.createdAt).toLocaleString()}
+                {formatDate(notification.createdAt)}
               </p>
             </div>
           ))}

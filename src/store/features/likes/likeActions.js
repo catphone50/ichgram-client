@@ -78,6 +78,7 @@ export const likeComment = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
+      console.error("Error liking comment:", error);
       return rejectWithValue(error.response.data);
     }
   }
@@ -97,6 +98,7 @@ export const unlikeComment = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
+      console.error("Error liking comment:", error);
       return rejectWithValue(error.response.data);
     }
   }
