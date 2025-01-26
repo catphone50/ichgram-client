@@ -19,6 +19,7 @@ import { isAuthenticated } from "./services/isAuthenticated.js";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage/index.jsx";
 import { PostModalProvider } from "./components/PostModalContext/index.jsx";
 import PostModal from "./components/PostModal/PostModal.jsx";
+import { useState } from "react";
 
 const ProtectedRoute = ({ element }) => {
   return isAuthenticated() ? element : <Navigate to="/login" />;
@@ -26,6 +27,7 @@ const ProtectedRoute = ({ element }) => {
 
 function App() {
   // console.log("Текущее состояние стора:", store.getState());
+  const [totalUnreadCount, setTotalUnreadCount] = useState(0);
 
   return (
     <Router>
@@ -40,7 +42,10 @@ function App() {
             isAuthenticated() ? (
               <div className="searchContainer">
                 <aside className="navigation">
-                  <SideNav />
+                  <SideNav
+                    totalUnreadCount={totalUnreadCount}
+                    setTotalUnreadCount={setTotalUnreadCount}
+                  />
                 </aside>
                 <main className="content">
                   <Routes>
@@ -72,7 +77,15 @@ function App() {
                     </Route>
                     <Route
                       path="/messages"
-                      element={<ProtectedRoute element={<MessagesPage />} />}
+                      element={
+                        <ProtectedRoute
+                          element={
+                            <MessagesPage
+                              setTotalUnreadCount={setTotalUnreadCount}
+                            />
+                          }
+                        />
+                      }
                     />
 
                     <Route

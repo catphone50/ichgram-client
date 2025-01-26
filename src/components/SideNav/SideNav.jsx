@@ -22,18 +22,11 @@ import Notifications from "../Notifications/Notifications";
 import Badge from "../Badge/index";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:3000", {
-  transports: ["websocket"],
-  withCredentials: true,
-  query: {
-    token: localStorage.getItem("token"), // Передаем токен как параметр запроса
-  },
-});
-
-const SideNav = () => {
+const SideNav = ({ setTotalUnreadCount, totalUnreadCount }) => {
   const location = useLocation();
   const { user, isLoading, error } = useSelector((state) => state.user);
 
+  const [socket, setSocket] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -41,33 +34,67 @@ const SideNav = () => {
   const [notificationCount, setNotificationCount] = useState(0);
 
   useEffect(() => {
+    if (!user) return;
+
+    const newSocket = io("http://localhost:3000", {
+      transports: ["websocket"],
+      withCredentials: true,
+      query: {
+        token: localStorage.getItem("token"),
+      },
+    });
+
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [user]);
+
+  useEffect(() => {
+    if (!socket) return;
+
     socket.emit("joinNotifications");
-    socket.on("initialNotifications", (notifications) => {
+    socket.emit("getTotalUnreadMessages");
+
+    const handleInitialNotifications = (notifications) => {
       const unreadNotifications = notifications.filter(
         (notification) => !notification.read
       );
       setNotificationCount(unreadNotifications.length);
-    });
+    };
 
-    socket.on("receiveNotification", (newNotification) => {
-      setNotificationCount(
-        (prevCount) => newNotification.read === false && prevCount + 1
+    const handleReceiveNotification = (newNotification) => {
+      setNotificationCount((prevCount) =>
+        !newNotification.read ? prevCount + 1 : prevCount
       );
-    });
+    };
+
+    const handleTotalUnreadMessages = ({ count }) => {
+      setTotalUnreadCount(count);
+    };
+
+    const handleNewMessage = () => {
+      socket.emit("getTotalUnreadMessages");
+    };
+
+    socket.on("initialNotifications", handleInitialNotifications);
+    socket.on("receiveNotification", handleReceiveNotification);
+    socket.on("totalUnreadMessages", handleTotalUnreadMessages);
+    socket.on("newMessage", handleNewMessage);
 
     socket.on("connect_error", (error) => {
       console.error("Ошибка подключения:", error);
     });
 
     return () => {
-      console.log("Отключение от сервера уведомлений...");
-      socket.off("connect");
-      socket.off("initialNotifications");
-      socket.off("receiveNotification");
-      socket.off("deleteNotification");
+      socket.off("initialNotifications", handleInitialNotifications);
+      socket.off("receiveNotification", handleReceiveNotification);
+      socket.off("totalUnreadMessages", handleTotalUnreadMessages);
+      socket.off("newMessage", handleNewMessage);
       socket.off("connect_error");
     };
-  }, []);
+  }, [socket]);
 
   if (isLoading) {
     return <div>Загрузка...</div>;
@@ -105,7 +132,9 @@ const SideNav = () => {
     setShowModal(false);
     setShowSearch(false);
     setNotificationCount(0);
-    socket.emit("markAsRead");
+    if (socket) {
+      socket.emit("markAsRead");
+    }
   };
 
   const userProfile = user ? user : null;
@@ -181,6 +210,7 @@ const SideNav = () => {
               />
               Messages
             </Link>
+            {totalUnreadCount > 0 && <Badge text={totalUnreadCount} />}
           </li>
           <li className={styles.navigationItem}>
             <button
@@ -196,7 +226,7 @@ const SideNav = () => {
               />
               Notifications
             </button>
-            <Badge text={notificationCount} />
+            {notificationCount > 0 && <Badge text={notificationCount} />}
           </li>
           <li className={styles.navigationItem}>
             <button onClick={openModal} className={styles.navigationLink}>

@@ -2,10 +2,10 @@
 import Footer from "../../components/Footer";
 import Messages from "../../components/Messages/Messages";
 
-const MessagesPage = () => {
+const MessagesPage = ({ setTotalUnreadCount }) => {
   return (
     <>
-      <Messages />
+      <Messages setTotalUnreadCount={setTotalUnreadCount} />
       <Footer />
     </>
   );
